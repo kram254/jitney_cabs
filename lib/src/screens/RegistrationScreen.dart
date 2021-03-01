@@ -1,9 +1,17 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
-import 'package:jitney_cabs/src/widgets/custom_txt.dart';
+import 'package:jitney_cabs/src/screens/loginScreen.dart';
 
 class RegistrationScreen extends StatelessWidget {
+   static const String idScreen = "register";
+
+   TextEditingController nameTextEditingController = TextEditingController();
+   TextEditingController emailTextEditingController = TextEditingController();
+   TextEditingController phoneTextEditingController = TextEditingController();
+   TextEditingController passwordTextEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +38,7 @@ class RegistrationScreen extends StatelessWidget {
                   children: [
                    SizedBox(height: 5.0),
                    TextField(
+                   controller: nameTextEditingController,
                    keyboardType: TextInputType.text,
                    decoration: InputDecoration(
                    labelText: 'Name',
@@ -40,6 +49,7 @@ class RegistrationScreen extends StatelessWidget {
 
                    SizedBox(height: 5.0),
                    TextField(
+                     controller: emailTextEditingController,
                    keyboardType: TextInputType.emailAddress,
                    decoration: InputDecoration(
                    labelText: 'Email',
@@ -50,6 +60,7 @@ class RegistrationScreen extends StatelessWidget {
 
                   SizedBox(height: 5.0),
                    TextField(
+                     controller: phoneTextEditingController,
                    keyboardType: TextInputType.phone,
                    decoration: InputDecoration(
                    labelText: 'Phone',
@@ -60,6 +71,7 @@ class RegistrationScreen extends StatelessWidget {
 
                    SizedBox(height: 5.0),
                    TextField(
+                     controller: passwordTextEditingController,
                    obscureText: true,
                    decoration: InputDecoration(
                    labelText: 'Password',
@@ -71,7 +83,10 @@ class RegistrationScreen extends StatelessWidget {
                  SizedBox(height: 5.0),
                  ElevatedButton(
                    style: ButtonStyle(),
-                    onPressed:(){},
+                    onPressed:()
+                    {
+                      registerNewUser(context);
+                    },
                     child: Container(
                       height: 50.0,
                       child: Center(
@@ -89,7 +104,10 @@ class RegistrationScreen extends StatelessWidget {
                 ),
               ),
              TextButton(
-               onPressed: (){}, 
+               onPressed: ()
+               {
+                 Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);        
+               }, 
                child: Text("Already have an account, Login here",
                style: TextStyle(color: red, fontSize: 13.0, fontFamily: "Brand Bold" ),
                ),
@@ -101,4 +119,23 @@ class RegistrationScreen extends StatelessWidget {
       ), 
     );
   }
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  void registerNewUser(BuildContext context)async 
+  {
+     final User _firebaseUser = (await _firebaseAuth
+     .createUserWithEmailAndPassword(
+     email: emailTextEditingController.text, 
+     password: passwordTextEditingController.text) ).user;
+
+     if(_firebaseUser != null)
+     {
+     // save user details to database
+     }
+     else
+     {
+       // display the error message
+     } 
+  }  
+
 }

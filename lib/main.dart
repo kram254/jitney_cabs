@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
 import 'package:jitney_cabs/src/screens/home.dart';
+import 'package:jitney_cabs/src/screens/loginScreen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+      
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      initialRoute: LoginScreen.idScreen,
+      routes:
+      {
+         RegistrationScreen.idScreen:(context)=> RegistrationScreen(),
+         LoginScreen.idScreen:(context)=> LoginScreen(),
+         HomeScreen.idScreen:(context)=> HomeScreen(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }

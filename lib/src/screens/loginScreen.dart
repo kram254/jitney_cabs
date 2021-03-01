@@ -1,9 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
-import 'package:jitney_cabs/src/widgets/custom_txt.dart';
+import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
 
 class LoginScreen extends StatelessWidget {
+      static const String idScreen = "login";
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +72,10 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
              TextButton(
-               onPressed: (){}, 
+               onPressed: ()
+               {
+                 Navigator.pushNamedAndRemoveUntil(context, RegistrationScreen.idScreen, (route) => false);
+               }, 
                child: Text("Register Here",
                style: TextStyle(color: red, fontSize: 13.0, fontFamily: "Brand Bold" ),
                ),
