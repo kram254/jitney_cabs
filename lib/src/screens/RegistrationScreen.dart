@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jitney_cabs/main.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/helpers/toastDisplay.dart';
+import 'package:jitney_cabs/src/screens/home.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
+import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 
 class RegistrationScreen extends StatelessWidget {
    static const String idScreen = "register";
@@ -85,7 +89,27 @@ class RegistrationScreen extends StatelessWidget {
                    style: ButtonStyle(),
                     onPressed:()
                     {
-                      registerNewUser(context);
+                     if(nameTextEditingController.text.length < 3)
+                     {
+                        displayToastMessage("name must contain more than 3 characters", context);
+                     } 
+                     else if(!emailTextEditingController.text.contains("@"))
+                     {
+                        displayToastMessage("Please enter a valid Email address", context);
+                     } 
+                     else if(phoneTextEditingController.text.isEmpty)
+                     {
+                        displayToastMessage("Please enter your mobile number", context);
+                     }
+                     else if(passwordTextEditingController.text.length < 6)
+                     {
+                        displayToastMessage("Password must be atleast 6 characters", context);
+                     }
+                     else 
+                     {
+                         registerNewUser(context);
+                     }
+
                     },
                     child: Container(
                       height: 50.0,
@@ -123,18 +147,48 @@ class RegistrationScreen extends StatelessWidget {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   void registerNewUser(BuildContext context)async 
   {
+     
+     showDialog(
+        context: context, 
+        barrierDismissible: false,
+        builder:(BuildContext context)
+        {
+          return ProgressDialog(message: "Jitney is registering you please wait ...",);
+        }
+        );
+
      final User _firebaseUser = (await _firebaseAuth
      .createUserWithEmailAndPassword(
      email: emailTextEditingController.text, 
-     password: passwordTextEditingController.text) ).user;
+     password: passwordTextEditingController.text).catchError((errMsg)
+     {
+       Navigator.pop(context);
+       displayToastMessage("Error: "+ errMsg.toString(), context);
+     } 
+     )).user;
 
      if(_firebaseUser != null)
      {
      // save user details to database
+      
+      Map userDataMap = 
+      {
+        "name": nameTextEditingController.text.trim(),
+        "email": emailTextEditingController.text.trim(),
+        "phone": phoneTextEditingController.text.trim(),
+      };
+
+      usersRef.child(_firebaseUser.uid).set(userDataMap);
+      displayToastMessage("Congratulations, welcome to Jitney.", context);
+
+      Navigator.pushNamedAndRemoveUntil(context, HomeScreen.idScreen, (route) => false);
+
      }
      else
      {
+       Navigator.pop(context);
        // display the error message
+       displayToastMessage("New user not created. Please try again.", context);
      } 
   }  
 

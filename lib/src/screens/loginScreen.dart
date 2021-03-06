@@ -1,10 +1,20 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:jitney_cabs/main.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/helpers/toastDisplay.dart';
 import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
+import 'package:jitney_cabs/src/screens/home.dart';
+import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 
 class LoginScreen extends StatelessWidget {
       static const String idScreen = "login";
+
+      TextEditingController emailTextEditingController = TextEditingController();
+      TextEditingController passwordTextEditingController = TextEditingController();
+
 
 
   @override
@@ -33,6 +43,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                    SizedBox(height: 5.0),
                    TextField(
+                   controller: emailTextEditingController,  
                    keyboardType: TextInputType.emailAddress,
                    decoration: InputDecoration(
                    labelText: 'Email',
@@ -43,6 +54,7 @@ class LoginScreen extends StatelessWidget {
 
                    SizedBox(height: 5.0),
                    TextField(
+                   controller: passwordTextEditingController,  
                    obscureText: true,
                    decoration: InputDecoration(
                    labelText: 'Password',
@@ -54,7 +66,22 @@ class LoginScreen extends StatelessWidget {
                  SizedBox(height: 5.0),
                  ElevatedButton(
                    style: ButtonStyle(),
-                    onPressed:(){},
+                    onPressed:()
+                    {
+                      if(!emailTextEditingController.text.contains("@"))
+                     {
+                        displayToastMessage("Please enter a valid Email address", context);
+
+                     } else if(passwordTextEditingController.text.isEmpty)
+                     {
+                        displayToastMessage("Please provide a password", context);
+                     }
+                     else 
+                     {
+                        loginAndAuthenticateUser(context);  
+                     }
+                        
+                    },
                     child: Container(
                       height: 50.0,
                       child: Center(
@@ -87,4 +114,54 @@ class LoginScreen extends StatelessWidget {
       ), 
     );
   }
+
+   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+   void loginAndAuthenticateUser(BuildContext context) async
+   {
+      showDialog(
+        context: context, 
+        barrierDismissible: false,
+        builder:(BuildContext context)
+        {
+          return ProgressDialog(message: "Jitney is authenticating you please wait ...",);
+        }
+        );
+
+     final User _firebaseUser = (await _firebaseAuth.signInWithEmailAndPassword(
+       email: emailTextEditingController.text, 
+       password: passwordTextEditingController.text).catchError((errMsg)
+       {
+         Navigator.pop(context);
+         displayToastMessage("Error: "+ errMsg.toString(), context);
+       })).user;
+
+       if(_firebaseUser != null)
+     {
+     // save user details to database
+      
+      usersRef.child(_firebaseUser.uid).once().then((DataSnapshot snap)
+      {
+        if(snap.value != null)
+        {
+          Navigator.pushNamedAndRemoveUntil(context, HomeScreen.idScreen, (route) => false);
+          displayToastMessage("You're logged in successfully.", context);
+        }
+        else
+        {
+          Navigator.pop(context);
+          _firebaseAuth.signOut();
+          displayToastMessage("This user doesn't exist. Please create new user account", context);
+        }
+      });
+      
+      
+     }
+     else
+     {
+       Navigator.pop(context);
+
+       // display the error message
+       displayToastMessage("Sorry Error occurred, Please try again.", context);
+     } 
+   }
 }
