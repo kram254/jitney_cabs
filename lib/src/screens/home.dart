@@ -3,8 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/providers/appData.dart';
+import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String idScreen = "homeScreen";
@@ -30,6 +34,9 @@ void locatePosition() async
   LatLng latLngPosition = LatLng(position.latitude, position.longitude);
   CameraPosition cameraPosition = new CameraPosition(target: latLngPosition, zoom: 14);
   newGoogleMapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+  String address = await AssistantMethods.searchCoordinateAddress(position, context);
+  print("This is your address:: "+ address);
 }
 
  static final CameraPosition _kGooglePlex = CameraPosition(
@@ -39,8 +46,9 @@ void locatePosition() async
 
   @override
   Widget build(BuildContext context) {
-    key: scaffoldKey;
+    
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Jitney'),
         backgroundColor: Colors.orange,
@@ -175,33 +183,38 @@ void locatePosition() async
                       SizedBox(height: 6.0,),
                       Text("Hello there", style: TextStyle(fontSize: 12.0),),
                       Text("Where to", style: TextStyle(fontSize: 20.0,fontFamily: "Brand-Bold"),),
-                      SizedBox(height: 6.0,),
-                      Container(
-                        decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(5.0),
-                        boxShadow: [
-                            BoxShadow(
-                              color: orange,
-                              blurRadius: 6.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(0.7, 0.7),
+                      SizedBox(height: 20.0,),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(5.0),
+                          boxShadow: [
+                              BoxShadow(
+                                color: black,
+                                blurRadius: 6.0,
+                                spreadRadius: 0.5,
+                                offset: Offset(0.7, 0.7),
+                               ),
+                              ],
                              ),
-                            ],
-                           ),
 
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            children: [
-                            Icon(Icons.search, color: Colors.blue,),
-                            SizedBox(width: 10.0,),
-                            Text("Search drop-off location"),
-                             ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: [
+                              Icon(Icons.search, color: Colors.blue,),
+                              SizedBox(width: 10.0,),
+                              Text("Search drop-off location"),
+                               ],
+                               ),
+                          ),   
+
                              ),
-                        ),   
-
-                           ),
+                      ),
                       SizedBox(height: 24.0),
                       Row(
                         children: [
@@ -210,7 +223,11 @@ void locatePosition() async
                           Column(
                             crossAxisAlignment:CrossAxisAlignment.start,
                             children: [
-                              Text("Add home"),
+                              Text(
+                                Provider.of<AppData>(context).pickUpLocation != null
+                                  ? Provider.of<AppData>(context).pickUpLocation
+                                  :"Add home"
+                              ),
                               SizedBox(height: 5.0),
                               Text("Living home address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
                             ],
