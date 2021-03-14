@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
+import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:provider/provider.dart';
@@ -110,6 +112,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(3.0),
                           child: TextField(
+                            onChanged: (val){
+                              findPlace(val);
+                            },
                             controller: dropOffTextEditingController,
                             decoration: InputDecoration(
                               hintText: "Where to?",
@@ -133,5 +138,21 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       
     );
+  }
+
+  void findPlace(String placeName) async
+  {
+    if (placeName.length>1)
+    {
+      String autoCompleteUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$placeName&key=$mapKey&sessiontoken=1234567890&components=country:ke";
+
+       var res = await RequestAssistant.getRequest(autoCompleteUrl);
+       if(res == "failed")
+       {
+         return;
+       }
+      print("Places Prediction Response ::");
+      print(res);
+    }
   }
 }
