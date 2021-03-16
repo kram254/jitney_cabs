@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/models/placePredictions.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
+import 'package:jitney_cabs/src/widgets/Divider.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -16,6 +18,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   TextEditingController pickUpTextEditingController = TextEditingController();
   TextEditingController dropOffTextEditingController = TextEditingController();
+   
+  //initializing the list
+  List<PlacePredictions> placePredictionList = [];
 
   @override
   Widget build(BuildContext context) 
@@ -133,7 +138,25 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
               ),
-          )
+          ),
+          //tile for displaying the predictions
+          SizedBox(height: 10.0,),
+         (placePredictionList.length > 0)
+         ? Padding(
+           padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+           child: ListView.separated(
+             padding: EdgeInsets.all(0.0),
+             itemBuilder: (context, index)
+             {
+               return PredictionTile(placePredictions: placePredictionList[index],);
+             },
+             separatorBuilder: (BuildContext context, int index) => DividerWidget() ,
+             itemCount: placePredictionList.length,
+             shrinkWrap: true,
+             physics: ClampingScrollPhysics(),
+           )
+           )
+         : Container(),
         ],
       ),
       
@@ -151,8 +174,54 @@ class _SearchScreenState extends State<SearchScreen> {
        {
          return;
        }
-      print("Places Prediction Response ::");
-      print(res);
+      
+       if(res["status"] == "OK")
+       {
+         var predictions = res["predictions"];
+
+         var placesList = (predictions as List).map((e) => PlacePredictions.fromJson(e)).toList();
+         setState(() {
+                    placePredictionList = placesList;
+                  });
+       }
     }
+  }
+}
+
+class PredictionTile extends StatelessWidget {
+
+  final PlacePredictions placePredictions;
+
+  PredictionTile({Key key, this.placePredictions}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child:  Column(
+        children: [
+          SizedBox(width: 10.0,),
+          Row(
+          children: [
+            Icon(Icons.add_location),
+            SizedBox(width: 14.0,),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 8.0,),
+                  Text(placePredictions.name_text, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16.0),),
+                  SizedBox(height: 4.0,),
+                  Text(placePredictions.secondary_text, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.0, color: grey),),
+                  SizedBox(height: 10.0,),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(width: 10.0,),
+        ],
+      ),
+      
+    );
   }
 }
