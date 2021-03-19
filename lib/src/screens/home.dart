@@ -8,6 +8,7 @@ import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
+import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -268,4 +269,24 @@ void locatePosition() async
       ),
     );
   }
+
+  Future<void> getPlaceDirection() async
+  {
+    var initialPos = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    var finalPos = Provider.of<AppData>(context, listen: false).dropOffLocation;
+
+    var pickUpLatLng = LatLng(initialPos.latitude, initialPos.longitude);
+    var dropOffLatLng = LatLng(finalPos.latitude, finalPos.longitude);
+
+    showDialog(
+      context: context, 
+      builder: (BuildContext content) => ProgressDialog(message: "Please wait...",)
+    );
+    var details = await AssistantMethods.obtainPlaceDirectionDetails(pickUpLatLng, dropOffLatLng);
+    Navigator.pop(context);
+
+    print("This is encoded points :");
+    print(details.encodedPoints);
+  }
+
 }
