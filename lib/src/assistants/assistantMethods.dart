@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/models/address.dart';
+import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,7 @@ class AssistantMethods
     return placeAddress;
   } 
 
-void obtainPlaceDirectionDetails (LatLng initialPosition, LatLng finalPosition) async
+static Future<DirectionDetails> obtainPlaceDirectionDetails (LatLng initialPosition, LatLng finalPosition) async
 {
   String directionUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=${initialPosition.latitude},${initialPosition.longitude}&destination=${finalPosition.latitude},${finalPosition.longitude}&key=$mapKey";
 
@@ -44,8 +45,21 @@ void obtainPlaceDirectionDetails (LatLng initialPosition, LatLng finalPosition) 
 
   if(res == "failed")
   {
-    return;
+    return null;
   }
+
+  DirectionDetails directionDetails = DirectionDetails();
+
+  directionDetails.encodedPoints = res["routes"][0]["overview_polyline"]["points"];
+
+  directionDetails.distanceText = res["routes"][0]["legs"][0]["distance"]["text"];
+  directionDetails.distanceText = res["routes"][0]["legs"][0]["distance"]["value"];
+
+  directionDetails.durationText = res["routes"][0]["legs"][0]["duration"]["text"];
+  directionDetails.durationValue= res["routes"][0]["legs"][0]["duration"]["value"];
+
+  return directionDetails;
+
 }
 
 }

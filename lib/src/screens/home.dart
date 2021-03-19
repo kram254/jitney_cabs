@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
@@ -22,6 +23,12 @@ class _HomeScreenState extends State<HomeScreen> {
 Completer<GoogleMapController> _controllerGoogleMap = Completer();
 GoogleMapController newGoogleMapController;
 GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+
+List<LatLng> pLineCoordinates = [];
+Set<Polyline> polylineSet = {};
+
+Set<Marker> markerSet = {};
+Set<Circle> circleSet = {};
 
 Position currentPosition;
 var geolocator = Geolocator();
@@ -110,6 +117,9 @@ void locatePosition() async
             myLocationEnabled: true,
             zoomControlsEnabled: true,
             zoomGesturesEnabled: true,
+            polylines: polylineSet,
+            markers: markerSet,
+            circles:  circleSet,
             onMapCreated: (GoogleMapController controller)
             {
               _controllerGoogleMap.complete(controller);
@@ -186,8 +196,14 @@ void locatePosition() async
                       Text("Where to", style: TextStyle(fontSize: 20.0,fontFamily: "Brand-Bold"),),
                       SizedBox(height: 20.0,),
                       GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
+                        onTap: () async
+                        {
+                          var res = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
+
+                          if(res == "obtainDirection")
+                          {
+                            await getPlaceDirection();
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -287,6 +303,100 @@ void locatePosition() async
 
     print("This is encoded points :");
     print(details.encodedPoints);
+
+    PolylinePoints polylinePoints = PolylinePoints();
+    List<PointLatLng> decodedPolyLinePointsResult = polylinePoints.decodePolyline(details.encodedPoints);
+     
+    pLineCoordinates.clear();
+
+    if (decodedPolyLinePointsResult.isNotEmpty)
+    {
+      decodedPolyLinePointsResult.forEach((PointLatLng pointLatLng)
+      {
+         pLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+
+    polylineSet.clear();
+
+    setState(() {
+     Polyline polyline = Polyline(
+      color: orange,
+      polylineId: PolylineId("PolylineID"),
+      jointType: JointType.round,
+      points: pLineCoordinates,
+      width: 5,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      geodesic: true,
+      );
+
+      polylineSet.add(polyline);
+        });
+
+      LatLngBounds latLngBounds;
+      if(pickUpLatLng.latitude > dropOffLatLng.latitude && pickUpLatLng.longitude > dropOffLatLng.longitude)
+      {
+        latLngBounds = LatLngBounds(southwest: dropOffLatLng, northeast: pickUpLatLng);
+      }
+      else if(pickUpLatLng.longitude> dropOffLatLng.longitude)
+      {
+        latLngBounds = LatLngBounds(southwest: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude), 
+        northeast: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude));
+      }
+      else if(pickUpLatLng.latitude > dropOffLatLng.latitude)
+      {
+        latLngBounds = LatLngBounds(southwest: LatLng(dropOffLatLng.latitude, pickUpLatLng.longitude), 
+        northeast: LatLng(pickUpLatLng.latitude, dropOffLatLng.longitude));
+      } 
+      else 
+      {
+        latLngBounds = LatLngBounds(southwest: pickUpLatLng, northeast: dropOffLatLng);
+      }
+
+      newGoogleMapController.animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 70));
+
+      Marker pickUpLocMarker = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        infoWindow: InfoWindow(title: initialPos.placeName, snippet: "My location"),
+        position:  pickUpLatLng,
+        markerId: MarkerId("pickUpId"),
+      );
+
+      Marker dropOffLocMarker = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        infoWindow: InfoWindow(title: finalPos.placeName, snippet: "Drop-off location"),
+        position:  dropOffLatLng,
+        markerId: MarkerId("dropOffId"),
+      );
+
+      setState(() {
+              markerSet.add(pickUpLocMarker);
+              markerSet.add(dropOffLocMarker);
+            });
+
+      Circle pickUpLocCircle = Circle(
+        fillColor: Colors.blue,
+        center: pickUpLatLng,
+        radius: 12,
+        strokeWidth: 4,
+        strokeColor: Colors.blueAccent,
+        circleId: CircleId("pickUpId")
+      );
+
+      Circle dropOffLocCircle = Circle(
+        fillColor: Colors.red,
+        center: dropOffLatLng,
+        radius: 12,
+        strokeWidth: 4,
+        strokeColor: Colors.redAccent,
+        circleId: CircleId("dropOffId"),
+      ); 
+
+      setState(() {
+              circleSet.add(pickUpLocCircle);
+              circleSet.add(dropOffLocCircle);
+            }); 
   }
 
 }
