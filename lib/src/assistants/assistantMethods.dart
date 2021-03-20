@@ -53,13 +53,27 @@ static Future<DirectionDetails> obtainPlaceDirectionDetails (LatLng initialPosit
   directionDetails.encodedPoints = res["routes"][0]["overview_polyline"]["points"];
 
   directionDetails.distanceText = res["routes"][0]["legs"][0]["distance"]["text"];
-  directionDetails.distanceText = res["routes"][0]["legs"][0]["distance"]["value"];
+  directionDetails.distanceValue = res["routes"][0]["legs"][0]["distance"]["value"];
 
   directionDetails.durationText = res["routes"][0]["legs"][0]["duration"]["text"];
   directionDetails.durationValue= res["routes"][0]["legs"][0]["duration"]["value"];
 
   return directionDetails;
 
+}
+
+static int calculateFares(DirectionDetails directionDetails)
+{
+  //USD for now
+  double timeTraveledFare = (directionDetails.durationValue / 60) * 0.20;
+  double distanceTraveledFare = (directionDetails.distanceValue / 1000) * 0.20;
+  double totalFareAmount = timeTraveledFare + distanceTraveledFare;
+
+  // converting the totalamount to KSHs
+
+  double totalLocalAmount = totalFareAmount * 109;
+
+  return totalLocalAmount.truncate();
 }
 
 }
