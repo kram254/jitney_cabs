@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/models/address.dart';
 import 'package:jitney_cabs/src/models/directionDetails.dart';
+import 'package:jitney_cabs/src/models/users.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:provider/provider.dart';
 
@@ -74,6 +77,23 @@ static int calculateFares(DirectionDetails directionDetails)
   double totalLocalAmount = totalFareAmount * 109;
 
   return totalLocalAmount.truncate();
+}
+
+// saving the users details into the firebase database
+static void getCurrentOnlineUserInfo() async
+{
+  firebaseUser = await FirebaseAuth.instance.currentUser;
+  String userId = firebaseUser.uid;
+  DatabaseReference reference = FirebaseDatabase.instance.reference().child("users").child(userId);
+
+  reference.once().then((DataSnapshot dataSnapshot)
+  {
+    if(dataSnapshot.value != null)
+    {
+      userCurrentInfo = Users.fromSnapshot(dataSnapshot);
+    }
+  }
+   );
 }
 
 }

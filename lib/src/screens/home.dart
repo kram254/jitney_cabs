@@ -1,17 +1,23 @@
 import 'dart:async';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
+import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
+import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
+import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,9 +43,88 @@ Position currentPosition;
 var geolocator = Geolocator();
 double bottomPaddingOfMap = 0;
 double rideDetailsContainerHeight = 0;
+double requestRideContainerHeight = 0;
 double searchContainerHeight = 300.0;
-
+DatabaseReference rideRequestRef;
 bool drawerOpen = true;
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    AssistantMethods.getCurrentOnlineUserInfo();
+  }
+
+ void saveRideRequest()
+ {
+   rideRequestRef = FirebaseDatabase.instance.reference().child("Ride Requests").push();
+
+   var pickUp = Provider.of<AppData>(context, listen: false).pickUpLocation;
+
+   var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
+
+   Map pickUpLocMap =
+   {
+     "latitude": pickUp.latitude.toString(),
+     "longitude": pickUp.longitude.toString(),
+   };
+
+   Map dropOffLocMap =
+   {
+     "latitude": dropOff.latitude.toString(),
+     "longitude": dropOff.longitude.toString(),
+   };
+
+   Map rideInfoMap =
+   {
+     "driver_id": "waiting",
+     "payment_method": "cash",
+     "pickUp": pickUpLocMap,
+     "dropOff": dropOffLocMap,
+     "created_at": DateTime.now().toString(),
+     "rider_name": userCurrentInfo.name,
+     "rider_phone": userCurrentInfo.phone,
+     "pickup_address": pickUp.placeName,
+     "dropoff_address": dropOff.placeName,
+   };
+
+   rideRequestRef.set(rideInfoMap);
+ } 
+
+void cancelRideRequest()
+{
+   rideRequestRef.remove();
+} 
+
+void displayRideRequestContainer()
+{
+  setState(() {
+      requestRideContainerHeight = 250.0;
+      rideDetailsContainerHeight = 0;
+      bottomPaddingOfMap = 230.0;
+      drawerOpen = true;
+    });
+
+    saveRideRequest();
+}
+
+resetApp()
+{
+  setState(() {
+      drawerOpen = true;
+      searchContainerHeight = 300.0;
+      rideDetailsContainerHeight = 0;
+      requestRideContainerHeight = 0;
+      bottomPaddingOfMap = 230.0;
+
+      polylineSet.clear();
+      markerSet.clear();
+      circleSet.clear();
+      pLineCoordinates.clear();
+    });
+
+    locatePosition();
+}
 
 void displayRideDetailsContainer() async
 {
@@ -122,6 +207,17 @@ void locatePosition() async
                 leading: Icon(Icons.info),
                 title: Text("About", style: TextStyle(fontSize: 16.0),),
               ),
+              GestureDetector(
+                onTap: ()
+                {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text("Sign Out", style: TextStyle(fontSize: 16.0),),
+                ),
+              ),
             ],
           ) ,
           ),
@@ -159,8 +255,16 @@ void locatePosition() async
              top: 38.0,
              left: 22.0,
              child: GestureDetector(
-               onTap: (){
-                  scaffoldKey.currentState.openDrawer();
+               onTap: ()
+               {
+                  if(drawerOpen)
+                  {
+                    scaffoldKey.currentState.openDrawer();
+                  }
+                  else
+                  {
+                    resetApp();
+                  }
                },
                child: Container(
                  decoration: BoxDecoration(
@@ -384,7 +488,7 @@ void locatePosition() async
                       child: RaisedButton(
                         onPressed: ()
                         {
-
+                           displayRideRequestContainer();
                         }, 
                         color: Theme.of(context).accentColor,
                         child: Padding(
@@ -404,6 +508,81 @@ void locatePosition() async
               ),
             ),
           ),
+         ),
+        
+         Positioned(
+           top: 0.0,
+           left: 0.0,
+           right: 0.0,
+           child: Container(
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+               color: white,
+               boxShadow: [
+                 BoxShadow(
+                   color: black,
+                   blurRadius: 16.0,
+                   spreadRadius: 0.6,
+                   offset: Offset(0.7, 0.7),    
+                 ),
+               ],
+             ),
+             height: requestRideContainerHeight,
+             child: Padding(
+               padding: const EdgeInsets.all(30.0),
+               child: Column(
+                 children: [
+                    SizedBox(height: 12.0,),
+
+                    SizedBox(
+                      height: double.infinity,
+                      child: WavyAnimatedTextKit(
+                          textStyle: TextStyle(
+                                 fontSize: 40.0,
+                                 fontWeight: FontWeight.bold,
+                                 fontFamily: "Canterbury"
+                            ),
+                             text: [
+                                  "Requesting your ride...",
+                                  "please wait...",
+                                  "Finding your driver",                              
+                             ],
+                           isRepeatingAnimation: true,
+                          ),
+                    ),
+                    SizedBox(height: 22.0,),
+
+                    GestureDetector(
+                      onTap: ()
+                      {
+                        cancelRideRequest();
+                        resetApp();
+                      },
+                      child: Container(
+                        height: 60.0,
+                        width: 60.0,
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(26.0),
+                          border: Border.all(width: 2.0, color: Colors.black54),
+                        ),
+                        child: Icon(Icons.close, size: 26.0),
+                      ),
+                    ),
+
+                    SizedBox(height: 10.0,),
+
+                    Container(
+                      width: double.infinity,
+                      child: Text("Cancel Ride", textAlign: TextAlign.center,
+                      style:  TextStyle(fontSize: 12.0),
+                      ),
+                    ),
+
+                 ],
+               ),
+             ),
+           ),
          ),
         ],
       ),
