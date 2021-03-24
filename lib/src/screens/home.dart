@@ -4,14 +4,17 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
+import 'package:jitney_cabs/src/assistants/geoFireAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/models/directionDetails.dart';
+import 'package:jitney_cabs/src/models/nearbyAvailableDrivers.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
@@ -704,6 +707,51 @@ void locatePosition() async
               circleSet.add(pickUpLocCircle);
               circleSet.add(dropOffLocCircle);
             }); 
+  }
+
+  void initGeoFireListener()
+  {
+    ///
+     Geofire.initialize("availableDrivers");  
+     Geofire.queryAtLocation(currentPosition.latitude, currentPosition.longitude, 5).listen((map) {
+        print(map);
+        if (map != null) {
+          var callBack = map['callBack'];
+
+          //latitude will be retrieved from map['latitude']
+          //longitude will be retrieved from map['longitude']
+
+          switch (callBack) {
+            case Geofire.onKeyEntered:
+            NearbyAvailableDrivers nearbyAvailableDrivers = NearbyAvailableDrivers();
+            nearbyAvailableDrivers.key = map['key'];
+            nearbyAvailableDrivers.latitude = map['latitude'];
+            nearbyAvailableDrivers.longitude = map['longitude'];
+            GeoFireAssistant.nearByAvailableDriversList.add(nearbyAvailableDrivers);
+
+              break;
+
+            case Geofire.onKeyExited:
+            GeoFireAssistant.removeDriverFromList(map['key']);
+              break;
+
+            case Geofire.onKeyMoved:
+            NearbyAvailableDrivers nearbyAvailableDrivers = NearbyAvailableDrivers();
+            nearbyAvailableDrivers.key = map['key'];
+            nearbyAvailableDrivers.latitude = map['latitude'];
+            nearbyAvailableDrivers.longitude = map['longitude'];
+            GeoFireAssistant.updateDriverNearbyLocation(nearbyAvailableDrivers);
+              break;
+
+            case Geofire.onGeoQueryReady:
+              break;
+          }
+        }
+
+        setState(() {});
+        
+     });
+    ///
   }
 
 }
