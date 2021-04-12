@@ -55,10 +55,10 @@ bool drawerOpen = true;
 bool nearbyAvailableDriverKeysLoaded = false;
 BitmapDescriptor nearbyIcon;
 List<NearbyAvailableDrivers> availableDrivers;
+String state = "normal";
 
 @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     AssistantMethods.getCurrentOnlineUserInfo();
   }
@@ -102,6 +102,9 @@ List<NearbyAvailableDrivers> availableDrivers;
 void cancelRideRequest()
 {
    rideRequestRef.remove();
+   setState(() {
+        state ="normal";
+      });
 } 
 
 void displayRideRequestContainer()
@@ -497,6 +500,9 @@ void locatePosition() async
                       child: RaisedButton(
                         onPressed: ()
                         {
+                          setState(() {
+                             state = "requesting";                         
+                                });
                            displayRideRequestContainer();
                            availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
                            searchNearestDriver();
@@ -842,7 +848,42 @@ void locatePosition() async
          String token = snap.value.toString();
          AssistantMethods.sendNotificationToDriver(token, context, rideRequestRef.key);
       }
+      else
+      {
+        return;
+      }
+
+      const oneSecondPassed = Duration(seconds: 1);
+      var timer = Timer.periodic(oneSecondPassed, (timer){
+
+        if(state != "requesting")
+        {
+          driversRef.child(driver.key).child("newRide").set("cancelled");
+          driversRef.child(driver.key).child("newRide").onDisconnect();
+          driverRequestTimeOut = 50;
+          timer.cancel();
+        }
+        driverRequestTimeOut = driverRequestTimeOut - 1;
+
+        driversRef.child(driver.key).child("newRide").onValue.listen((event){
+          if(event.snapshot.value.toString() == "accepted")
+          {
+          driversRef.child(driver.key).child("newRide").onDisconnect();
+          driverRequestTimeOut = 50;
+          timer.cancel();
+          }
+        });
+        
+        if(driverRequestTimeOut == 1)
+        {
+          driversRef.child(driver.key).child("newRide").set("timeout");
+          driversRef.child(driver.key).child("newRide").onDisconnect();
+          driverRequestTimeOut = 50;
+          timer.cancel();
+          searchNearestDriver();
+        }
+       });
     });
   }
 
-}
+} 
