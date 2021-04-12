@@ -19,6 +19,7 @@ import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
+import 'package:jitney_cabs/src/widgets/noDriverAvailableDialog.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,7 @@ DatabaseReference rideRequestRef;
 bool drawerOpen = true;
 bool nearbyAvailableDriverKeysLoaded = false;
 BitmapDescriptor nearbyIcon;
+List<NearbyAvailableDrivers> availableDrivers;
 
 @override
   void initState() {
@@ -495,6 +497,8 @@ void locatePosition() async
                         onPressed: ()
                         {
                            displayRideRequestContainer();
+                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                           searchNearestDriver();
                         }, 
                         color: Theme.of(context).accentColor,
                         child: Padding(
@@ -801,6 +805,29 @@ void locatePosition() async
       } );
 
     }
+  }
+
+  void noDriverFound()
+  {
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (BuildContext context) => NoDriverAvailableDialog(),
+      );
+  }
+
+  void searchNearestDriver()
+  {
+    if(availableDrivers == 0)
+    {
+      cancelRideRequest();
+      resetApp();
+      noDriverFound();
+      return;
+    }
+
+    var driver = availableDrivers[0];
+    availableDrivers.removeAt(0);
   }
 
 }

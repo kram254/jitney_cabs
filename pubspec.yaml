@@ -91,9 +91,9 @@ flutter:
     - family: Brand-Regular
       fonts:
         - asset: fonts/bolt-regular.ttf
-    - family: Brand Bold
-      fonts:
-        - asset: fonts/bolt-semigold.ttf    
+ #   - family: Brand Bold
+ #     fonts:
+  #      - asset: fonts/bolt-semigold.ttf    
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
