@@ -9,6 +9,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jitney_cabs/main.dart';
 import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
 import 'package:jitney_cabs/src/assistants/geoFireAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
@@ -827,7 +828,21 @@ void locatePosition() async
     }
 
     var driver = availableDrivers[0];
+    notifyDriver(driver);
     availableDrivers.removeAt(0);
+  }
+
+  void notifyDriver(NearbyAvailableDrivers driver)
+  {
+    driversRef.child(driver.key).child("newRide").set(rideRequestRef.key);
+
+    driversRef.child(driver.key).child("token").once().then((DataSnapshot snap){
+      if(snap.value != null)
+      {
+         String token = snap.value.toString();
+         AssistantMethods.sendNotificationToDriver(token, context, rideRequestRef.key);
+      }
+    });
   }
 
 }

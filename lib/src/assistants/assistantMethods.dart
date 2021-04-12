@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/models/users.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart'as http;
 
 class AssistantMethods
 {
@@ -103,5 +105,45 @@ static void getCurrentOnlineUserInfo() async
     var random = Random();
     int radNumber = random.nextInt(num);
     return radNumber.toDouble();
+  }
+
+  //automating the sending of Notification using http and json maps
+
+  static sendNotificationToDriver(String token, context, String ride_Request_id) async
+  {
+    var destination = Provider.of<AppData>(context, listen: false).dropOffLocation;
+    Map<String, String> headerMap =
+    {
+      'Content-type': 'application/json',
+      'Authorization': serverToken
+    };
+
+    Map notificationMap =
+    {
+      'body': 'DropOff Address, ${destination.placeName}',
+      'title': 'New Ride Request'
+    };
+
+    Map dataMap =
+    {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id':'1',
+      'status':'done',
+      'ride_request_id':ride_Request_id,
+    };
+
+    Map sendNotificationMap =
+    {
+      "notification": notificationMap,
+      "data": dataMap,
+      "priority": "high",
+      "to":token,
+    };
+
+    var res =  await http.post(
+      'https://fcm.googleapis/fcm/send',
+      headers: headerMap,
+      body: jsonEncode(sendNotificationMap),
+    );
   }
 }

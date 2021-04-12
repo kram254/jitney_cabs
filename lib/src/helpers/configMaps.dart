@@ -4,3 +4,5 @@ String mapKey = "AIzaSyCG1-AWjvpqmmq1HaLggAPiG1YV3u0ak8Y";
 
 User firebaseUser; 
 Users userCurrentInfo;
+
+String serverToken = "key=AAAARKYwmHE:APA91bHuDz-yCCGm3-m1PQamL7emIn8snWNvvJPeNv5zHLZ3V1to03FI8HsGxsBfGZY9O1toyu9BoMXwEM1XI0jx04JybptXQ8zk-ljER3CG59PwNwW3LD22ilO9SujHIQYWtliKznhL";
