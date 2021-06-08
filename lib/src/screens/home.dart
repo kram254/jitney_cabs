@@ -50,12 +50,14 @@ double bottomPaddingOfMap = 0;
 double rideDetailsContainerHeight = 0;
 double requestRideContainerHeight = 0;
 double searchContainerHeight = 300.0;
+double driverDetailsContainerheight = 0;
 DatabaseReference rideRequestRef;
 bool drawerOpen = true;
 bool nearbyAvailableDriverKeysLoaded = false;
 BitmapDescriptor nearbyIcon;
 List<NearbyAvailableDrivers> availableDrivers;
 String state = "normal";
+StreamSubscription<Event> rideStreamSubscription;
 
 @override
   void initState() {
@@ -97,6 +99,45 @@ String state = "normal";
    };
 
    rideRequestRef.set(rideInfoMap);
+
+   rideStreamSubscription = rideRequestRef.onValue.listen((event)
+   {
+     if(event.snapshot.value == null){
+       return;
+     }
+
+     if(event.snapshot.value["car_details"] != null)
+     {
+       setState(() {
+         carDetailsDriver = event.snapshot.value["car_details"].toString();
+       });
+     }
+
+     if(event.snapshot.value["driver_name"] != null)
+     {
+       setState(() {
+         driverName = event.snapshot.value["driver_name"].toString();
+       });
+     }
+
+     if(event.snapshot.value["driver_phone"] != null)
+     {
+       setState(() {
+         driverPhone = event.snapshot.value["driver_phone"].toString();
+       });
+     }
+
+     if(event.snapshot.value["status"] != null)
+     {
+       statusRide = event.snapshot.value["status"].toString();
+     }
+
+     if(statusRide == "accepted")
+     {
+       displayDriverDetailsContainer();
+     }
+
+    });
  } 
 
 void cancelRideRequest()
@@ -115,8 +156,18 @@ void displayRideRequestContainer()
       bottomPaddingOfMap = 230.0;
       drawerOpen = true;
     });
-
+  
     saveRideRequest();
+}
+
+void displayDriverDetailsContainer()
+{
+  setState(() {
+      requestRideContainerHeight = 0.0;
+      rideDetailsContainerHeight = 0.0;
+      bottomPaddingOfMap = 290.0;
+      driverDetailsContainerheight = 310.0;
+    });
 }
 
 resetApp()
@@ -140,7 +191,7 @@ resetApp()
 void displayRideDetailsContainer() async
 {
   await getPlaceDirection();
-
+  
   setState(() {
       searchContainerHeight = 0;
       rideDetailsContainerHeight = 240.0;
@@ -262,8 +313,8 @@ void locatePosition() async
 
            
 
-           //HamburgerButton for the drawer
-           Positioned(
+          //HamburgerButton for the drawer
+          Positioned(
              top: 38.0,
              left: 22.0,
              child: GestureDetector(
@@ -302,7 +353,7 @@ void locatePosition() async
              ),
            ),
 
-
+          // Search UI
           Positioned(
             left: 0.0,
             right: 0.0,
@@ -421,8 +472,9 @@ void locatePosition() async
               ),
             ),
           ),
-
-         Positioned(
+          
+          //Ride details UI
+          Positioned(
           bottom: 0.0,
           left: 0.0,
           right: 0.0,
@@ -527,7 +579,8 @@ void locatePosition() async
           ),
          ),
         
-         Positioned(
+          //Ride request or cancel UI
+          Positioned(
            top: 0.0,
            left: 0.0,
            right: 0.0,
@@ -601,6 +654,133 @@ void locatePosition() async
              ),
            ),
          ),
+        
+          // display assigned driver info
+          Positioned(
+           top: 0.0,
+           left: 0.0,
+           right: 0.0,
+           child: Container(
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+               color: white,
+               boxShadow: [
+                 BoxShadow(
+                   color: black,
+                   blurRadius: 16.0,
+                   spreadRadius: 0.6,
+                   offset: Offset(0.7, 0.7),    
+                 ),
+               ],
+             ),
+             height: driverDetailsContainerheight,
+             child: Padding(
+               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                    SizedBox(height: 6.0,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(rideStatus, textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0, fontFamily: "Brand-bold",),),
+                      
+                      
+                      ],
+                    ),
+                    SizedBox(height: 22.0),
+
+                    Divider(height: 2.0, thickness: 2.0,),
+
+                    SizedBox(height: 22.0),
+
+                    Text(carDetailsDriver, style: TextStyle(color: Colors.grey,)),
+
+                    Text(driverName, style: TextStyle(fontSize: 20.0)),
+
+                    SizedBox(height: 22.0),
+
+                    Divider(height: 2.0, thickness: 2.0,),
+
+                    SizedBox(height: 22.0),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0, color: Colors.grey, ),
+                              ),
+                              child: Icon(
+                                Icons.call,
+                              ),
+
+                            ),
+                            SizedBox(height: 10.0),
+
+                            Text('Call'),
+
+                          ],
+                          ),
+                      
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0, color: Colors.grey, ),
+                              ),
+                              child: Icon(
+                                Icons.list,
+                              ),
+
+                            ),
+                            SizedBox(height: 10.0),
+
+                            Text('Details'),
+
+                          ],
+                          ),
+                      
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 55.0,
+                              width: 55.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
+                                border: Border.all(width: 2.0, color: Colors.grey, ),
+                              ),
+                              child: Icon(
+                                Icons.close_outlined,
+                              ),
+
+                            ),
+                            SizedBox(height: 10.0),
+
+                            Text('Cancel'),
+
+                          ],
+                          ),
+                      
+                      ],
+                    ),
+                 ],
+               ),
+             ),
+          ),
+            ),
         ],
       ),
     );
