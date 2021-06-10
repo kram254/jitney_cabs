@@ -14,16 +14,20 @@ import 'package:jitney_cabs/src/assistants/assistantMethods.dart';
 import 'package:jitney_cabs/src/assistants/geoFireAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
+import 'package:jitney_cabs/src/helpers/toastDisplay.dart';
 import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/models/nearbyAvailableDrivers.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
+import 'package:jitney_cabs/src/screens/ratingScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
+import 'package:jitney_cabs/src/widgets/collectFareDialog.dart';
 import 'package:jitney_cabs/src/widgets/noDriverAvailableDialog.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
-import 'package:jitney_cabs/src/screens/loginScreen.dart';
+//import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String idScreen = "homeScreen";
@@ -58,6 +62,8 @@ BitmapDescriptor nearbyIcon;
 List<NearbyAvailableDrivers> availableDrivers;
 String state = "normal";
 StreamSubscription<Event> rideStreamSubscription;
+bool isRequestingPositiondetails = false;
+String uName = " ";
 
 @override
   void initState() {
@@ -96,11 +102,12 @@ StreamSubscription<Event> rideStreamSubscription;
      "rider_phone": userCurrentInfo.phone,
      "pickup_address": pickUp.placeName,
      "dropoff_address": dropOff.placeName,
+     "ride_type": carRideType,
    };
 
    rideRequestRef.set(rideInfoMap);
 
-   rideStreamSubscription = rideRequestRef.onValue.listen((event)
+   rideStreamSubscription = rideRequestRef.onValue.listen((event) async
    {
      if(event.snapshot.value == null){
        return;
@@ -127,6 +134,27 @@ StreamSubscription<Event> rideStreamSubscription;
        });
      }
 
+     if(event.snapshot.value["driver_location"] != null)
+     {
+          double driverLat = double.parse(event.snapshot.value["driver_location"]["latitude"].toString());
+          double driverLng = double.parse(event.snapshot.value["driver_location"]["longitude"].toString());
+          LatLng driverCurrentLocation = LatLng(driverLat, driverLng);
+          if(statusRide == "accepted")
+          {
+            updateRideTimeToPickUpLoc(driverCurrentLocation);
+          }
+          else if(statusRide == "onride")
+          {
+            updateRideTimeToDropOffLoc(driverCurrentLocation);
+          }
+          else if(statusRide == "arrived")
+          {
+            setState(() {
+              rideStatus = "Driver has arrived";
+            });
+          }
+     }
+
      if(event.snapshot.value["status"] != null)
      {
        statusRide = event.snapshot.value["status"].toString();
@@ -135,10 +163,92 @@ StreamSubscription<Event> rideStreamSubscription;
      if(statusRide == "accepted")
      {
        displayDriverDetailsContainer();
+       Geofire.stopListener();
+       deleteGeofireMarkers();
+     }
+
+     if(statusRide == "ended")
+     {
+       if(event.snapshot.value["fares"] != null)
+       {
+         int fare = int.parse(event.snapshot.value["fares"].toString());
+         var res = await showDialog(
+           context: context,
+           barrierDismissible: false,
+           builder: (BuildContext context) => CollectFareDialog(paymentMethod: "cash", fareAmount: fare,),
+         );
+
+         String driverId = "";
+         if(res == "close")
+         {
+           if(event.snapshot.value["driver_id"] != null)
+           {
+             driverId = event.snapshot.value["driver_id"].toString();
+           }
+             
+           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> RatingScreen(driverId: driverId)));   
+
+           rideRequestRef.onDisconnect();
+           rideRequestRef=null;
+           rideStreamSubscription.cancel();
+           rideStreamSubscription = null;
+           resetApp();
+         }
+       }
      }
 
     });
  } 
+
+void deleteGeofireMarkers()
+{
+  setState(() {
+    markerSet.removeWhere((element) => element.markerId.value.contains("driver"));
+  });
+}
+
+void updateRideTimeToPickUpLoc(LatLng driverCurrentLocation) async
+{
+   if(isRequestingPositiondetails == false)
+   {
+
+    isRequestingPositiondetails = true;
+
+   var positionUserLatLng = LatLng(currentPosition.latitude, currentPosition.longitude);
+   var details = await AssistantMethods.obtainPlaceDirectionDetails(driverCurrentLocation, positionUserLatLng);
+   if(details == null)
+   {
+     return;
+   }
+   setState(() {
+     rideStatus = "Driver is on the way - "+ details.durationText;
+   });
+   }
+
+   isRequestingPositiondetails = false;
+}
+
+void updateRideTimeToDropOffLoc(LatLng driverCurrentLocation) async
+{
+   if(isRequestingPositiondetails == false)
+   {
+
+    isRequestingPositiondetails = true;
+
+   var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
+   var dropOffUserLatLng = LatLng(dropOff.latitude, dropOff.longitude);
+   var details = await AssistantMethods.obtainPlaceDirectionDetails(driverCurrentLocation, dropOffUserLatLng);
+   if(details == null)
+   {
+     return;
+   }
+   setState(() {
+     rideStatus = "Going to destination - "+ details.durationText;
+   });
+   }
+
+   isRequestingPositiondetails = false;
+}
 
 void cancelRideRequest()
 {
@@ -183,6 +293,13 @@ resetApp()
       markerSet.clear();
       circleSet.clear();
       pLineCoordinates.clear();
+
+      statusRide = " ";
+      driverName = " ";
+      driverPhone = " ";
+      carDetailsDriver = " ";
+      rideStatus = "Driver is coming";
+      driverDetailsContainerheight = 0.0;
     });
 
     locatePosition();
@@ -194,8 +311,8 @@ void displayRideDetailsContainer() async
   
   setState(() {
       searchContainerHeight = 0;
-      rideDetailsContainerHeight = 240.0;
-      bottomPaddingOfMap = 230.0;
+      rideDetailsContainerHeight = 340.0;
+      bottomPaddingOfMap = 360.0;
       drawerOpen = false;
     });
 }
@@ -212,6 +329,8 @@ void locatePosition() async
   String address = await AssistantMethods.searchCoordinateAddress(position, context);
   print("This is your address:: "+ address);
   initGeoFireListener();
+
+  uName = userCurrentInfo.name;
 }
 
  static final CameraPosition _kGooglePlex = CameraPosition(
@@ -224,10 +343,10 @@ void locatePosition() async
     createIconMarker();
     return Scaffold(
       key: scaffoldKey,
-      appBar: AppBar(
-        title: Text('Jitney'),
-        backgroundColor: Colors.orange,
-      ),
+      // appBar: AppBar(
+      //   title: Text('Jitney'),
+      //   backgroundColor: Colors.orange,
+      // ),
       drawer: Container(
         color: white,
         width: 255.0,
@@ -248,7 +367,7 @@ void locatePosition() async
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("User name", style: TextStyle(fontSize: 16.0, fontFamily: "Brand-Bold"),),
+                          Text(uName, style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
                           Text("Visit Profile"),
                         ],
                       ),
@@ -500,36 +619,151 @@ void locatePosition() async
                 padding:  EdgeInsets.symmetric(vertical: 17.0),
                 child: Column(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      color: Colors.tealAccent[100],
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          children: [
-                            Image.asset("images/taxi.png", height: 70.0, width: 80.0),
-                            SizedBox(width: 16.0,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Car", style: TextStyle(fontSize: 18.0, fontFamily: "Brand-Bold"),
-                                ),
-                                Text(
-                                  ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Text(
-                                  ((tripDirectionDetails != null) ? '\$${AssistantMethods.calculateFares(tripDirectionDetails)}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
-                                ),
+    /// jitney ride category
+                    GestureDetector(
+                      onTap: ()
+                      {
+                         
+                         setState(() {
+                             state = "requesting";
+                             carRideType = "Jitney";                        
+                            });
+                               
+                           displayRideRequestContainer();
+                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                           searchNearestDriver();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.grey,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Image.asset("images/jitney.png", height: 70.0, width: 80.0),
+                              SizedBox(width: 16.0,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "J!tney", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                  ),
+                                ],
                               ),
-                          ],
+                              Expanded(
+                                child: Text(
+                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.75}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.0,),
+
+                    SizedBox(height: 10.0,),
+                    Divider(height:2.0, thickness:2.0),
+                    SizedBox(height: 10.0,),
+
+///  jitney fam category
+                    GestureDetector(
+                      onTap: ()
+                      {
+                         
+                         setState(() {
+                             state = "requesting";
+                             carRideType = "Jitney-Fam";                       
+                                });
+                           displayRideRequestContainer();
+                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                           searchNearestDriver();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.grey,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Image.asset("images/jitneyfam.png", height: 70.0, width: 80.0),
+                              SizedBox(width: 16.0,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "J!tney-Fam", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Text(
+                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.95}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 10.0,),
+                    Divider(height:2.0, thickness:2.0),
+                    SizedBox(height: 10.0,),
+
+//// Jitney Lux category
+                    GestureDetector(
+                      onTap: ()
+                      {
+                         
+                         setState(()
+                            {
+                             state = "requesting";
+                             carRideType = "Jitney-Lux";                      
+                            });
+                           displayRideRequestContainer();
+                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                           searchNearestDriver();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.grey,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            children: [
+                              Image.asset("images/jitneylux.png", height: 70.0, width: 80.0),
+                              SizedBox(width: 16.0,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "J!tney-Lux", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                  ),
+                                  Text(
+                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Text(
+                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))* 1.2}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 10.0,),
+                    Divider(height:2.0, thickness:2.0),
+                    SizedBox(height: 10.0,),
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -545,33 +779,7 @@ void locatePosition() async
                       ),
                       ),
 
-                    SizedBox(height: 24.0,),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        onPressed: ()
-                        {
-                          setState(() {
-                             state = "requesting";                         
-                                });
-                           displayRideRequestContainer();
-                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
-                           searchNearestDriver();
-                        }, 
-                        color: Theme.of(context).accentColor,
-                        child: Padding(
-                          padding: EdgeInsets.all(17.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Request", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: white),),
-                              Icon(FontAwesomeIcons.taxi, size:26.0, color:white),
-                            ],
-                          ),
-                          ),
-                        ),
-                    ),
+                                     
                   ],
                 ),
               ),
@@ -708,72 +916,29 @@ void locatePosition() async
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 55.0,
-                              width: 55.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0, color: Colors.grey, ),
-                              ),
-                              child: Icon(
-                                Icons.call,
-                              ),
-
-                            ),
-                            SizedBox(height: 10.0),
-
-                            Text('Call'),
-
-                          ],
-                          ),
-                      
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 55.0,
-                              width: 55.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0, color: Colors.grey, ),
-                              ),
-                              child: Icon(
-                                Icons.list,
-                              ),
-
-                            ),
-                            SizedBox(height: 10.0),
-
-                            Text('Details'),
-
-                          ],
-                          ),
-                      
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 55.0,
-                              width: 55.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(26.0)),
-                                border: Border.all(width: 2.0, color: Colors.grey, ),
-                              ),
-                              child: Icon(
-                                Icons.close_outlined,
-                              ),
-
-                            ),
-                            SizedBox(height: 10.0),
-
-                            Text('Cancel'),
-
-                          ],
-                          ),
-                      
+                       Padding(
+                         padding: const EdgeInsets.symmetric(horizontal:20.0),
+                         // ignore: deprecated_member_use
+                         child: RaisedButton(
+                           onPressed: ()
+                           {                             
+                             launch(('tel://$driverPhone'));
+                           },
+                           color: Colors.green,
+                           child: Padding(
+                             padding:EdgeInsets.all(17.0),
+                             child:Row(
+                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                               children: [
+                                 Text('Call Driver', 
+                                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+                                 ),
+                                 Icon(Icons.call, color:Colors.white, size: 26.0),
+                               ],
+                             ),
+                           ),
+                         ),
+                       ),
                       ],
                     ),
                  ],
@@ -1005,7 +1170,7 @@ void locatePosition() async
 
   void searchNearestDriver()
   {
-    if(availableDrivers == 0)
+    if(availableDrivers.length == 0)
     {
       cancelRideRequest();
       resetApp();
@@ -1014,8 +1179,27 @@ void locatePosition() async
     }
 
     var driver = availableDrivers[0];
-    notifyDriver(driver);
-    availableDrivers.removeAt(0);
+    driversRef.child(driver.key).child("car_details").child("type").once().then((DataSnapshot snap) async
+    {
+       if(await snap.value != null)
+       {
+         String carType = snap.value.toString();
+         if(carType == carRideType)
+         {
+           notifyDriver(driver);
+           availableDrivers.removeAt(0);
+         }
+         else
+         {
+           displayToastMessage(carRideType + " not found. Try again later" , context);
+         }
+       }
+       else
+         {
+           displayToastMessage(carRideType + " not found. Try again later" , context);
+         }
+    });
+    
   }
 
   void notifyDriver(NearbyAvailableDrivers driver)

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+//import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
@@ -146,4 +147,6 @@ static void getCurrentOnlineUserInfo() async
       body: jsonEncode(sendNotificationMap),
     );
   }
+
+  
 }
