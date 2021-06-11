@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
+import 'package:jitney_cabs/src/screens/aboutScreen.dart';
 import 'package:jitney_cabs/src/screens/home.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
            RegistrationScreen.idScreen:(context)=> RegistrationScreen(),
            LoginScreen.idScreen:(context)=> LoginScreen(),
            HomeScreen.idScreen:(context)=> HomeScreen(),
+           AboutScreen.idScreen:(context)=> AboutScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

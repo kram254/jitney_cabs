@@ -18,7 +18,9 @@ import 'package:jitney_cabs/src/helpers/toastDisplay.dart';
 import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/models/nearbyAvailableDrivers.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
+import 'package:jitney_cabs/src/screens/aboutScreen.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
+import 'package:jitney_cabs/src/screens/profileTab.dart';
 import 'package:jitney_cabs/src/screens/ratingScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
@@ -368,7 +370,15 @@ void locatePosition() async
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(uName, style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
-                          Text("Visit Profile"),
+                          GestureDetector(
+                            onTap: ()
+                            {
+                               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                             },
+                            child: Text(
+                              "Visit Profile"
+                              ),
+                          ),
                         ],
                       ),
                     ],
@@ -383,11 +393,23 @@ void locatePosition() async
               ),
               ListTile(
                 leading: Icon(Icons.person),
-                title: Text("Visit Profile", style: TextStyle(fontSize: 16.0),),
+                title: GestureDetector(
+                  onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                  },
+                  child: Text("Visit Profile", style: TextStyle(fontSize: 16.0),)
+                  ),
               ),
-              ListTile(
-                leading: Icon(Icons.info),
-                title: Text("About", style: TextStyle(fontSize: 16.0),),
+              GestureDetector(
+                onTap: ()
+                {
+                  Navigator.pushNamedAndRemoveUntil(context, AboutScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text("About", style: TextStyle(fontSize: 16.0),),
+                ),
               ),
               GestureDetector(
                 onTap: ()
@@ -396,8 +418,8 @@ void locatePosition() async
                   Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);
                 },
                 child: ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text("Sign Out", style: TextStyle(fontSize: 16.0),),
+                  leading: Icon(Icons.logout, color: Colors.red),
+                  title: Text("Sign Out", style: TextStyle(fontSize: 16.0, color: Colors.red),),
                 ),
               ),
             ],
