@@ -19,6 +19,7 @@ import 'package:jitney_cabs/src/models/directionDetails.dart';
 import 'package:jitney_cabs/src/models/nearbyAvailableDrivers.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/aboutScreen.dart';
+import 'package:jitney_cabs/src/screens/historyScreen.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:jitney_cabs/src/screens/profileTab.dart';
 import 'package:jitney_cabs/src/screens/ratingScreen.dart';
@@ -333,6 +334,8 @@ void locatePosition() async
   initGeoFireListener();
 
   uName = userCurrentInfo.name;
+
+  AssistantMethods.retrieveHistoryInfo(context);
 }
 
  static final CameraPosition _kGooglePlex = CameraPosition(
@@ -387,9 +390,16 @@ void locatePosition() async
               ),
               DividerWidget(),
               SizedBox(height: 12.0),
-              ListTile(
-                leading: Icon(Icons.history),
-                title: Text("History", style: TextStyle(fontSize: 16.0),),
+              GestureDetector(
+                 onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
+                  },
+
+                child: ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text("History", style: TextStyle(fontSize: 16.0),),
+                ),
               ),
               ListTile(
                 leading: Icon(Icons.person),
