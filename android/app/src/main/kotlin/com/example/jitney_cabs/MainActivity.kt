@@ -1,4 +1,4 @@
-package com.example.jitney_cabs
+package com.karios.jitney
 
 import io.flutter.embedding.android.FlutterActivity
 

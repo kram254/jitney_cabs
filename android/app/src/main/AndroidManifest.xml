@@ -6,7 +6,7 @@
    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
    <application
-        android:name="android.support.multidex.MultiDexApplication" 
+        android:name="androidx.multidex.MultiDexApplication" 
         android:label="jitney_cabs"
         android:icon="@mipmap/ic_launcher">
         <activity

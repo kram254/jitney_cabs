@@ -34,7 +34,7 @@ class RegistrationScreen extends StatelessWidget {
                 ),
               SizedBox(height: 5.0),  
               Text("SignUp as a Rider",
-              style: TextStyle(fontSize:24.0, color: grey, fontFamily: "Brand Bold"),
+              style: TextStyle(fontSize:24.0, color: Colors.black54, fontFamily: "Brand Bold"),
               ),
               
               Padding(padding: EdgeInsets.all(20.0),
@@ -153,13 +153,13 @@ class RegistrationScreen extends StatelessWidget {
         barrierDismissible: false,
         builder:(BuildContext context)
         {
-          return ProgressDialog(message: "Jitney is registering you please wait ...",);
+          return ProgressDialog(message: "Jitney's registering you please...",);
         }
         );
 
      final User _firebaseUser = (await _firebaseAuth
      .createUserWithEmailAndPassword(
-     email: emailTextEditingController.text, 
+     email: emailTextEditingController.text,
      password: passwordTextEditingController.text).catchError((errMsg)
      {
        Navigator.pop(context);

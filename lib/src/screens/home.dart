@@ -845,7 +845,7 @@ void locatePosition() async
                     SizedBox(height: 12.0,),
 
                     SizedBox(
-                      height: double.infinity,
+                      height: 200.0,
                       child: WavyAnimatedTextKit(
                           textStyle: TextStyle(
                                  fontSize: 40.0,

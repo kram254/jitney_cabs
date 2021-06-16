@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         title: 'J!tney',
         theme: ThemeData(
           //fontFamily: "Brand Bold",
-          primarySwatch: orange,
+          primarySwatch: Colors.orange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idScreen : HomeScreen.idScreen,

@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               SizedBox(height: 5.0),  
               Text("Login as a Rider",
-              style: TextStyle(fontSize:24.0, color: grey, fontFamily: "Brand Bold"),
+              style: TextStyle(fontSize:24.0, color: Colors.black54, fontFamily: "Brand Bold"),
               ),
               
               Padding(padding: EdgeInsets.all(20.0),
@@ -123,7 +123,7 @@ class LoginScreen extends StatelessWidget {
         barrierDismissible: false,
         builder:(BuildContext context)
         {
-          return ProgressDialog(message: "Jitney is authenticating you please wait ...",);
+          return ProgressDialog(message: "Jitney is authenticating...",);
         }
         );
 
