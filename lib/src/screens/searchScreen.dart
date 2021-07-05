@@ -37,7 +37,8 @@ class _SearchScreenState extends State<SearchScreen> {
             height: 215.0,
             
             decoration: BoxDecoration(
-              color: white,
+              color: orange,
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20), ),
               boxShadow: [
                 BoxShadow(
                   color: black,
@@ -156,7 +157,7 @@ class _SearchScreenState extends State<SearchScreen> {
              shrinkWrap: true,
              physics: ClampingScrollPhysics(),
            )
-           )
+           ) 
          : Container(),
         ],
       ),
@@ -215,9 +216,9 @@ class PredictionTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 8.0,),
-                    Text(placePredictions.name_text, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16.0),),
+                    Text(placePredictions.name_text ?? " ", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 16.0),),
                     SizedBox(height: 4.0,),
-                    Text(placePredictions.secondary_text, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.0, color: grey),),
+                    Text(placePredictions.secondary_text ?? " ", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12.0, color: grey),),
                     SizedBox(height: 10.0,),
                   ],
                 ),

@@ -1,33 +1,121 @@
 {
   "project_info": {
-    "project_number": "294845978737",
-    "project_id": "jitney-cabs-dc352",
-    "storage_bucket": "jitney-cabs-dc352.appspot.com"
+    "project_number": "270170165185",
+    "firebase_url": "https://jitney-31808-default-rtdb.firebaseio.com",
+    "project_id": "jitney-31808",
+    "storage_bucket": "jitney-31808.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:294845978737:android:750b15b6e6c1f438d123d0",
+        "mobilesdk_app_id": "1:270170165185:android:d2a9cd5100d3c14e7c6940",
         "android_client_info": {
-          "package_name": "com.karios.jitney"
+          "package_name": "com.example.jitney"
         }
       },
       "oauth_client": [
         {
-          "client_id": "294845978737-qda8dqlmp3rlsokl0feiv77rmetpg6bg.apps.googleusercontent.com",
+          "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCG1-AWjvpqmmq1HaLggAPiG1YV3u0ak8Y"
+          "current_key": "AIzaSyCCkK4ZL7B_cnaqeTsBAt2ypF6iJLtQA_g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "294845978737-qda8dqlmp3rlsokl0feiv77rmetpg6bg.apps.googleusercontent.com",
+              "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270170165185:android:5c591843b66a81367c6940",
+        "android_client_info": {
+          "package_name": "com.example.jitneydriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCkK4ZL7B_cnaqeTsBAt2ypF6iJLtQA_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270170165185:android:30921aa902471d457c6940",
+        "android_client_info": {
+          "package_name": "com.karios.jitney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCkK4ZL7B_cnaqeTsBAt2ypF6iJLtQA_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270170165185:android:3e60e160241aa1217c6940",
+        "android_client_info": {
+          "package_name": "com.karios.jitneydriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCkK4ZL7B_cnaqeTsBAt2ypF6iJLtQA_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

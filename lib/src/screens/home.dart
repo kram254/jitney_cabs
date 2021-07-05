@@ -359,36 +359,59 @@ void locatePosition() async
           child: ListView(
             children: [
               //DrawerHeader
+              //DrawerHeader
               Container(
-                height: 165.0,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: white,
-                    ),
-                  child: Row(
-                    children: [
-                      Image.asset("images/user_icon.png", height: 65.0, width: 65.0),
-                      SizedBox(width: 16.0,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(uName, style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
-                          GestureDetector(
-                            onTap: ()
-                            {
-                               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
-                             },
-                            child: Text(
-                              "Visit Profile"
-                              ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),  
-                 ), 
+              height: 165.0,
+              child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: orange,
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.0,)),
+                boxShadow: [
+                BoxShadow(
+                  color: black,
+                  blurRadius: 7.0,
+                  spreadRadius: 0.6,
+                  offset: Offset(0.7, 0.7),
+                ),
+              ]
               ),
-              DividerWidget(),
+              currentAccountPicture:Icon(Icons.person_outline_outlined, color: Colors.white, size: 70,),
+              accountName: Text('uName', 
+              style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold"),
+              ),
+              accountEmail: Text('User email', 
+              style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold",),
+              ),
+             
+              ),
+                // child: DrawerHeader(
+                //   decoration: BoxDecoration(
+                //     color: white,
+                //     ),
+                //   child: Row(
+                //     children: [
+                //       Image.asset("images/user_icon.png", height: 65.0, width: 65.0),
+                //       SizedBox(width: 16.0,),
+                //       Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Text("uName", style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
+                //           GestureDetector(
+                //             onTap: ()
+                //             {
+                //               // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                //              },
+                //             child: Text(
+                //               "Visit Profile"
+                //               ),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),  
+                //  ), 
+              ),
+              //DividerWidget(),
               SizedBox(height: 12.0),
               GestureDetector(
                  onTap: ()
@@ -496,7 +519,7 @@ void locatePosition() async
                    ]
                  ),
                  child: CircleAvatar(
-                   backgroundColor: white,
+                   backgroundColor: orange,
                    child: Icon((drawerOpen) ? Icons.menu : Icons.close, color: black,),
                    radius: 20.0,
                  ),
@@ -549,7 +572,7 @@ void locatePosition() async
                           child: Container(
                             decoration: BoxDecoration(
                             color: white,
-                            borderRadius: BorderRadius.circular(5.0),
+                            borderRadius: BorderRadius.circular(23.0),
                             boxShadow: [
                                 BoxShadow(
                                   color: black,
@@ -582,9 +605,9 @@ void locatePosition() async
                               crossAxisAlignment:CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  Provider.of<AppData>(context).pickUpLocation != null
-                                    ? Provider.of<AppData>(context).pickUpLocation
-                                    :"Add home"
+                                  Provider.of<AppData>(context).pickUpLocation != null 
+                                   ? Provider.of<AppData>(context).pickUpLocation.placeName 
+                                   : "Add home",
                                 ),
                                 SizedBox(height: 5.0),
                                 Text("Living home address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
