@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,6 +22,7 @@ import 'package:jitney_cabs/src/providers/appData.dart';
 import 'package:jitney_cabs/src/screens/aboutScreen.dart';
 import 'package:jitney_cabs/src/screens/historyScreen.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
+import 'package:jitney_cabs/src/screens/parcelScreen.dart';
 import 'package:jitney_cabs/src/screens/profileTab.dart';
 import 'package:jitney_cabs/src/screens/ratingScreen.dart';
 import 'package:jitney_cabs/src/screens/searchScreen.dart';
@@ -345,6 +347,29 @@ void locatePosition() async
 
   @override
   Widget build(BuildContext context) {
+    // FutureBuilder(            
+    //    future: getPlaceDirection(),//adding your main location widget in future
+    //    builder: (context, state) {
+    //       if (state.connectionState == ConnectionState.active ||
+    //           state.connectionState == ConnectionState.waiting) {
+    //           return SpinKitRipple(
+    //            itemBuilder: (BuildContext context, int index) {
+    //                 return DecoratedBox(
+    //                     decoration: BoxDecoration(
+    //                     color: index.isEven ? Colors.grey : 
+    //                     Color(0xffffb838),
+    //                            ),
+    //                          );
+    //                        },
+    //                      );
+    //               } 
+    //               else {
+
+    //   //here you should write your main logic to be shown once latitude ! = NULL
+    //    return Container();
+    //    }
+    //  }
+    //  );
     createIconMarker();
     return Scaffold(
       key: scaffoldKey,
@@ -358,7 +383,6 @@ void locatePosition() async
         child: Drawer(
           child: ListView(
             children: [
-              //DrawerHeader
               //DrawerHeader
               Container(
               height: 165.0,
@@ -411,8 +435,20 @@ void locatePosition() async
                 //   ),  
                 //  ), 
               ),
+
               //DividerWidget(),
               SizedBox(height: 12.0),
+              GestureDetector(
+                onTap: ()
+                {
+                  Navigator.pushNamedAndRemoveUntil(context, ParcelScreen.idScreen, (route) => false);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text("Parcels", style: TextStyle(fontSize: 16.0),),
+                ),
+              ),
+
               GestureDetector(
                  onTap: ()
                   {
@@ -879,7 +915,7 @@ void locatePosition() async
                                   "Requesting your ride...",
                                   "please wait...",
                                   "Finding your driver",                              
-                             ],
+                                    ],
                            isRepeatingAnimation: true,
                           ),
                     ),

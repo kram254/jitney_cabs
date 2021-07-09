@@ -7,7 +7,7 @@
 
    <application
         android:name="androidx.multidex.MultiDexApplication" 
-        android:label="jitney_cabs"
+        android:label="Jitney"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.karios.jitney.MainActivity"

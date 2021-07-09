@@ -39,6 +39,7 @@ dependencies:
   url_launcher: ^5.7.10
   smooth_star_rating: ^1.1.1
   intl: ^0.16.1
+  flutter_spinkit: "^4.1.2"
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
     - images/jitney.png
     - images/jitneyfam.png
     - images/jitneylux.png
+    - images/background.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -88,6 +90,15 @@ flutter:
     - family: Brand-Regular
       fonts:
         - asset: fonts/bolt-regular.ttf
+    - family: Brand Bold
+      fonts:
+        - asset: fonts/bolt-semibold.ttf
+    - family: Canterburry
+      fonts:
+        - asset: fonts/Canterbury.ttf
+    - family: Vanberg
+      fonts:
+        - asset: fonts/Vanberg.ttf
   #   - family: Brand Bold
   #     fonts:
   #      - asset: fonts/bolt-semigold.ttf

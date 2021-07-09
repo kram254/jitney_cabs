@@ -23,21 +23,20 @@ class AssistantMethods
 {
   static Future<String> searchCoordinateAddress(Position position, context) async
   {
-    String placeAddress = "";
-    String st1, st2, st3, st4;
+    String placeAddress = " ";
+    // String st1, st2, st3, st4;
     String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey";
 
     var response  = await RequestAssistant.getRequest(url);
-
     if(response != "failed")
     {
-      //placeAddress = response["results"][0]["formatted_address"];
-      st1 = response["results"][0]["address_components"][3]["long_name"];
-      st2 = response["results"][0]["address_components"][4]["long_name"];
-      st3 = response["results"][0]["address_components"][5]["long_name"];
-      st4 = response["results"][0]["address_components"][6]["long_name"];
+      placeAddress = response["results"][0]["formatted_address"];
+      // st1 = response["results"][0]["address_components"][3]["long_name"];
+      // st2 = response["results"][0]["address_components"][4]["long_name"];
+      // st3 = response["results"][0]["address_components"][5]["long_name"];
+      // st4 = response["results"][0]["address_components"][6]["long_name"];
 
-      placeAddress = st1 + ", " + st2 + ", " + st3 + ", " + st4;
+      // placeAddress = st1 + ", " + st2 + ", " + st3 + ", " + st4;
 
       Address userPickUpAddress = new Address();
       userPickUpAddress.longitude = position.longitude;
@@ -78,15 +77,29 @@ static int calculateFares(DirectionDetails directionDetails)
 {
   //USD for now
   double timeTraveledFare = (directionDetails.durationValue / 60) * 0.20;
-  double distanceTraveledFare = (directionDetails.distanceValue / 1000) * 0.20;
+  double distanceTraveledFare = (directionDetails.distanceValue / 1000) * 1.00;
   double totalFareAmount = timeTraveledFare + distanceTraveledFare;
 
   // converting the totalamount to KSHs
 
-  double totalLocalAmount = totalFareAmount * 109;
+  double totalLocalAmount = totalFareAmount * 108;
 
   return totalLocalAmount.truncate();
 }
+
+// static int calculateFares(DirectionDetails directionDetails)
+// {
+//   //USD for now
+//   double timeTraveledFare = (directionDetails.durationValue / 60) * 0.20;
+//   double distanceTraveledFare = (directionDetails.distanceValue / 1000) * 0.20;
+//   double totalFareAmount = timeTraveledFare + distanceTraveledFare;
+
+//   // converting the totalamount to KSHs
+
+//   double totalLocalAmount = totalFareAmount * 109;
+
+//   return totalLocalAmount.truncate();
+// }
 
 // saving the users details into the firebase database
 static void getCurrentOnlineUserInfo() async

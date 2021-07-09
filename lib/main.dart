@@ -8,6 +8,7 @@ import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
 import 'package:jitney_cabs/src/screens/aboutScreen.dart';
 import 'package:jitney_cabs/src/screens/home.dart';
 import 'package:jitney_cabs/src/screens/loginScreen.dart';
+import 'package:jitney_cabs/src/screens/parcelScreen.dart';
 import 'package:provider/provider.dart';
 
 void main() async
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
            LoginScreen.idScreen:(context)=> LoginScreen(),
            HomeScreen.idScreen:(context)=> HomeScreen(),
            AboutScreen.idScreen:(context)=> AboutScreen(),
+           ParcelScreen.idScreen:(context)=> ParcelScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

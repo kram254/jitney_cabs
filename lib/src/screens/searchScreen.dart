@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
 import 'package:jitney_cabs/src/helpers/configMaps.dart';
