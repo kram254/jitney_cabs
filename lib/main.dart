@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 //import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
+//import 'package:jitney_cabs/src/providers/user.dart';
 import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
 import 'package:jitney_cabs/src/screens/aboutScreen.dart';
 import 'package:jitney_cabs/src/screens/home.dart';
@@ -29,24 +30,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => AppData(),
-      child: MaterialApp(
-        title: 'J!tney',
-        theme: ThemeData(
-          //fontFamily: "Brand Bold",
-          primarySwatch: Colors.orange,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+
+    // return MultiProvider(
+    //     providers: [
+    //           ChangeNotifierProvider(create: (context) => AppData(),),
+    //           ChangeNotifierProvider(create: (context) => UserProvider(),),
+    //            ],
+        child: MaterialApp(
+          title: 'J!tney',
+          theme: ThemeData(
+            //fontFamily: "Brand Bold",
+            primarySwatch: Colors.orange,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idScreen : HomeScreen.idScreen,
+          routes:
+          {
+             RegistrationScreen.idScreen:(context)=> RegistrationScreen(),
+             LoginScreen.idScreen:(context)=> LoginScreen(),
+             HomeScreen.idScreen:(context)=> HomeScreen(),
+             AboutScreen.idScreen:(context)=> AboutScreen(),
+             ParcelScreen.idScreen:(context)=> ParcelScreen(),
+          },
+          debugShowCheckedModeBanner: false,
         ),
-        initialRoute: FirebaseAuth.instance.currentUser == null ? LoginScreen.idScreen : HomeScreen.idScreen,
-        routes:
-        {
-           RegistrationScreen.idScreen:(context)=> RegistrationScreen(),
-           LoginScreen.idScreen:(context)=> LoginScreen(),
-           HomeScreen.idScreen:(context)=> HomeScreen(),
-           AboutScreen.idScreen:(context)=> AboutScreen(),
-           ParcelScreen.idScreen:(context)=> ParcelScreen(),
-        },
-        debugShowCheckedModeBanner: false,
-      ),
-    );
+        );
   }
 }

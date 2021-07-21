@@ -92,35 +92,6 @@
           ]
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:270170165185:android:3e60e160241aa1217c6940",
-        "android_client_info": {
-          "package_name": "com.karios.jitneydriver"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCCkK4ZL7B_cnaqeTsBAt2ypF6iJLtQA_g"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "270170165185-e3qjrkuuksf073k99qlovck0dqe82do6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"

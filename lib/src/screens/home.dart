@@ -30,6 +30,7 @@ import 'package:jitney_cabs/src/widgets/Divider.dart';
 import 'package:jitney_cabs/src/widgets/collectFareDialog.dart';
 import 'package:jitney_cabs/src/widgets/noDriverAvailableDialog.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
+//import 'package:jitney_cabs/src/providers/user.dart';
 //import 'package:jitney_cabs/src/screens/loginScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -347,6 +348,9 @@ void locatePosition() async
 
   @override
   Widget build(BuildContext context) {
+   // final user = Provider.of<UserProvider>(context);
+
+
     // FutureBuilder(            
     //    future: getPlaceDirection(),//adding your main location widget in future
     //    builder: (context, state) {
@@ -372,673 +376,691 @@ void locatePosition() async
     //  );
     createIconMarker();
     return Scaffold(
-      key: scaffoldKey,
-      // appBar: AppBar(
-      //   title: Text('Jitney'),
-      //   backgroundColor: Colors.orange,
-      // ),
-      drawer: Container(
-        color: white,
-        width: 255.0,
-        child: Drawer(
-          child: ListView(
-            children: [
-              //DrawerHeader
-              Container(
-              height: 165.0,
-              child: UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: orange,
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.0,)),
-                boxShadow: [
-                BoxShadow(
-                  color: black,
-                  blurRadius: 7.0,
-                  spreadRadius: 0.6,
-                  offset: Offset(0.7, 0.7),
+        key: scaffoldKey,
+        // appBar: AppBar(
+        //   title: Text('Jitney'),
+        //   backgroundColor: Colors.orange,
+        // ),
+        drawer: Container(
+          color: white,
+          width: 255.0,
+          child: Drawer(
+            child: ListView(
+              children: [
+                //DrawerHeader
+                Container(
+                height: 165.0,
+                child: 
+                // UserAccountsDrawerHeader(
+                // decoration: BoxDecoration(
+                //   color: orange,
+                //   borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),
+                // ),
+                // currentAccountPicture: Icon(Icons.person, color: Colors.white, size: 70,), 
+                // accountName: Text(user.userModel?.name ?? "Username loading...",
+                // style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                // ),
+                // accountEmail: Text(user.userModel?.email ?? "Email loading...",
+                // style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),)
+                //  ),
+    
+    
+                UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: orange,
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15.0,)),
+                  boxShadow: [
+                  BoxShadow(
+                    color: black,
+                    blurRadius: 7.0,
+                    spreadRadius: 0.6,
+                    offset: Offset(0.7, 0.7),
+                  ),
+                ]
                 ),
-              ]
-              ),
-              currentAccountPicture:Icon(Icons.person_outline_outlined, color: Colors.white, size: 70,),
-              accountName: Text('uName', 
-              style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold"),
-              ),
-              accountEmail: Text('User email', 
-              style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold",),
-              ),
-             
-              ),
-                // child: DrawerHeader(
-                //   decoration: BoxDecoration(
-                //     color: white,
-                //     ),
-                //   child: Row(
-                //     children: [
-                //       Image.asset("images/user_icon.png", height: 65.0, width: 65.0),
-                //       SizedBox(width: 16.0,),
-                //       Column(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           Text("uName", style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
-                //           GestureDetector(
-                //             onTap: ()
-                //             {
-                //               // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
-                //              },
-                //             child: Text(
-                //               "Visit Profile"
-                //               ),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),  
-                //  ), 
-              ),
-
-              //DividerWidget(),
-              SizedBox(height: 12.0),
-              GestureDetector(
-                onTap: ()
-                {
-                  Navigator.pushNamedAndRemoveUntil(context, ParcelScreen.idScreen, (route) => false);
-                },
-                child: ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text("Parcels", style: TextStyle(fontSize: 16.0),),
+                currentAccountPicture:Icon(Icons.person_outline_outlined, color: Colors.white, size: 70,),
+                accountName: Text('uName', 
+                style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold"),
                 ),
-              ),
-
-              GestureDetector(
-                 onTap: ()
-                  {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
-                  },
-
-                child: ListTile(
-                  leading: Icon(Icons.history),
-                  title: Text("History", style: TextStyle(fontSize: 16.0),),
+                accountEmail: Text('User email', 
+                style: TextStyle(color: Colors.white, fontSize: 17, fontFamily: "Brand Bold",),
                 ),
-              ),
-              ListTile(
-                leading: Icon(Icons.person),
-                title: GestureDetector(
+               
+                ),
+    
+    
+                  // child: DrawerHeader(
+                  //   decoration: BoxDecoration(
+                  //     color: white,
+                  //     ),
+                  //   child: Row(
+                  //     children: [
+                  //       Image.asset("images/user_icon.png", height: 65.0, width: 65.0),
+                  //       SizedBox(width: 16.0,),
+                  //       Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text("uName", style: TextStyle(fontSize: 16.0, fontFamily: "Brand Bold"),),
+                  //           GestureDetector(
+                  //             onTap: ()
+                  //             {
+                  //               // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                  //              },
+                  //             child: Text(
+                  //               "Visit Profile"
+                  //               ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),  
+                  //  ), 
+                ),
+    
+                //DividerWidget(),
+                SizedBox(height: 12.0),
+                GestureDetector(
                   onTap: ()
                   {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                    Navigator.pushNamedAndRemoveUntil(context, ParcelScreen.idScreen, (route) => false);
                   },
-                  child: Text("Visit Profile", style: TextStyle(fontSize: 16.0),)
+                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text("Parcels", style: TextStyle(fontSize: 16.0),),
                   ),
-              ),
-              GestureDetector(
-                onTap: ()
-                {
-                  Navigator.pushNamedAndRemoveUntil(context, AboutScreen.idScreen, (route) => false);
-                },
-                child: ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text("About", style: TextStyle(fontSize: 16.0),),
                 ),
-              ),
-              GestureDetector(
-                onTap: ()
-                {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);
-                },
-                child: ListTile(
-                  leading: Icon(Icons.logout, color: Colors.red),
-                  title: Text("Sign Out", style: TextStyle(fontSize: 16.0, color: Colors.red),),
+    
+                GestureDetector(
+                   onTap: ()
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
+                    },
+    
+                  child: ListTile(
+                    leading: Icon(Icons.history),
+                    title: Text("History", style: TextStyle(fontSize: 16.0),),
+                  ),
                 ),
-              ),
-            ],
-          ) ,
-          ),
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
-            mapType: MapType.normal,
-            myLocationButtonEnabled: true,
-            initialCameraPosition: _kGooglePlex,
-            myLocationEnabled: true,
-            zoomControlsEnabled: true,
-            zoomGesturesEnabled: true,
-            polylines: polylineSet,
-            markers: markerSet,
-            circles:  circleSet,
-            onMapCreated: (GoogleMapController controller)
-            {
-              _controllerGoogleMap.complete(controller);
-              newGoogleMapController = controller;
-
-              setState(() {
-                     bottomPaddingOfMap = 265.0;         
-                            });
-
-              locatePosition();
-            }
-           ),
-
-           
-
-          //HamburgerButton for the drawer
-          Positioned(
-             top: 38.0,
-             left: 22.0,
-             child: GestureDetector(
-               onTap: ()
-               {
-                  if(drawerOpen)
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: GestureDetector(
+                    onTap: ()
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileTab()));
+                    },
+                    child: Text("Visit Profile", style: TextStyle(fontSize: 16.0),)
+                    ),
+                ),
+                GestureDetector(
+                  onTap: ()
                   {
-                    scaffoldKey.currentState.openDrawer();
-                  }
-                  else
+                    Navigator.pushNamedAndRemoveUntil(context, AboutScreen.idScreen, (route) => false);
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text("About", style: TextStyle(fontSize: 16.0),),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: ()
                   {
-                    resetApp();
-                  }
-               },
-               child: Container(
-                 decoration: BoxDecoration(
-                   color: white,
-                   borderRadius: BorderRadius.circular(22.0),
-                   boxShadow: [
-                     BoxShadow(
-                       color: black,
-                       blurRadius: 6.0,
-                       spreadRadius: 0.6,
-                       offset: Offset(
-                         0.7, 0.7
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.idScreen, (route) => false);
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.logout, color: Colors.red),
+                    title: Text("Sign Out", style: TextStyle(fontSize: 16.0, color: Colors.red),),
+                  ),
+                ),
+              ],
+            ) ,
+            ),
+        ),
+        body: Stack(
+          children: [
+            GoogleMap(
+              padding: EdgeInsets.only(bottom: bottomPaddingOfMap),
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              initialCameraPosition: _kGooglePlex,
+              myLocationEnabled: true,
+              zoomControlsEnabled: true,
+              zoomGesturesEnabled: true,
+              polylines: polylineSet,
+              markers: markerSet,
+              circles:  circleSet,
+              onMapCreated: (GoogleMapController controller)
+              {
+                _controllerGoogleMap.complete(controller);
+                newGoogleMapController = controller;
+    
+                setState(() {
+                       bottomPaddingOfMap = 265.0;         
+                              });
+    
+                locatePosition();
+              }
+             ),
+    
+             
+    
+            //HamburgerButton for the drawer
+            Positioned(
+               top: 38.0,
+               left: 22.0,
+               child: GestureDetector(
+                 onTap: ()
+                 {
+                    if(drawerOpen)
+                    {
+                      scaffoldKey.currentState.openDrawer();
+                    }
+                    else
+                    {
+                      resetApp();
+                    }
+                 },
+                 child: Container(
+                   decoration: BoxDecoration(
+                     color: white,
+                     borderRadius: BorderRadius.circular(22.0),
+                     boxShadow: [
+                       BoxShadow(
+                         color: black,
+                         blurRadius: 6.0,
+                         spreadRadius: 0.6,
+                         offset: Offset(
+                           0.7, 0.7
+                         ),
                        ),
-                     ),
-                   ]
-                 ),
-                 child: CircleAvatar(
-                   backgroundColor: orange,
-                   child: Icon((drawerOpen) ? Icons.menu : Icons.close, color: black,),
-                   radius: 20.0,
+                     ]
+                   ),
+                   child: CircleAvatar(
+                     backgroundColor: orange,
+                     child: Icon((drawerOpen) ? Icons.menu : Icons.close, color: black,),
+                     radius: 20.0,
+                   ),
                  ),
                ),
              ),
-           ),
-
-          // Search UI
-          Positioned(
+    
+            // Search UI
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              bottom: 0.0,
+              child: AnimatedSize(
+                vsync: this,
+                curve: Curves.bounceIn,
+                duration: new Duration(milliseconds: 160),
+                child: Container(
+                    height: searchContainerHeight,
+                    decoration: BoxDecoration(
+                      color: white,
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18) ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: orange,
+                          blurRadius: 16.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0.7, 0.7),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 6.0,),
+                          Text("Hello there", style: TextStyle(fontSize: 12.0),),
+                          Text("Where to", style: TextStyle(fontSize: 20.0,fontFamily: "Brand-Bold"),),
+                          SizedBox(height: 20.0,),
+                          GestureDetector(
+                            onTap: () async
+                            {
+                              var res = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
+    
+                              if(res == "obtainDirection")
+                              {
+                                displayRideDetailsContainer();
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(23.0),
+                              boxShadow: [
+                                  BoxShadow(
+                                    color: black,
+                                    blurRadius: 6.0,
+                                    spreadRadius: 0.5,
+                                    offset: Offset(0.7, 0.7),
+                                   ),
+                                  ],
+                                 ),
+    
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                  Icon(Icons.search, color: Colors.blue,),
+                                  SizedBox(width: 10.0,),
+                                  Text("Search drop-off location"),
+                                   ],
+                                   ),
+                                 ),   
+    
+                              ),
+                          ),
+                          SizedBox(height: 24.0),
+                          Row(
+                            children: [
+                              Icon(Icons.home, color: grey,),
+                              SizedBox(width: 12.0,),
+                              Column(
+                                crossAxisAlignment:CrossAxisAlignment.start,
+                                children: [
+                                   Text(
+                                      Provider.of<AppData>(context).pickUpLocation != null 
+                                       ? Provider.of<AppData>(context).pickUpLocation.placeName 
+                                       : "Add home",
+                                    ),
+                                  
+                                  SizedBox(height: 5.0),
+                                  Text("Living home address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
+                                ],
+    
+                              )
+    
+                            ],
+                          ),
+                          SizedBox(height: 10.0,),
+    
+                          DividerWidget(),
+    
+                          SizedBox(height: 10.0,),
+    
+                          Row(
+                            children: [
+                              Icon(Icons.work, color: grey,),
+                              SizedBox(width: 12.0,),
+                              Column(
+                                crossAxisAlignment:CrossAxisAlignment.start,
+                                children: [
+                                  Text("Add work"),
+                                  SizedBox(height: 5.0),
+                                  Text("Your office address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
+                                ],
+    
+                              )
+    
+                            ],
+                          )
+    
+                        ],
+                      ),
+                    ),
+                ),
+              ),
+            ),
+            
+            //Ride details UI
+            Positioned(
+            bottom: 0.0,
             left: 0.0,
             right: 0.0,
-            bottom: 0.0,
             child: AnimatedSize(
               vsync: this,
               curve: Curves.bounceIn,
               duration: new Duration(milliseconds: 160),
               child: Container(
-                  height: searchContainerHeight,
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18) ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: orange,
-                        blurRadius: 16.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(0.7, 0.7),
+                height: rideDetailsContainerHeight,
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0),topRight: Radius.circular(16.0)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: black,
+                      blurRadius: 16.0,
+                      spreadRadius: 0.6,
+                      offset: Offset(0.7, 0.7),
+                    ),
+                  ]
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: 17.0),
+                  child: Column(
+                    children: [
+      /// jitney ride category
+                      GestureDetector(
+                        onTap: ()
+                        {
+                           
+                           setState(() {
+                               state = "requesting";
+                               carRideType = "Jitney";                        
+                              });
+                                 
+                             displayRideRequestContainer();
+                             availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                             searchNearestDriver();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          color: Colors.grey,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              children: [
+                                Image.asset("images/jitney.png", height: 70.0, width: 80.0),
+                                SizedBox(width: 16.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "J!tney", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                    ),
+                                    Text(
+                                      ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Text(
+                                      ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.75}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
+    
+                      SizedBox(height: 10.0,),
+                      Divider(height:2.0, thickness:2.0),
+                      SizedBox(height: 10.0,),
+    
+    ///  jitney fam category
+                      GestureDetector(
+                        onTap: ()
+                        {
+                           
+                           setState(() {
+                               state = "requesting";
+                               carRideType = "Jitney-Fam";                       
+                                  });
+                             displayRideRequestContainer();
+                             availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                             searchNearestDriver();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          color: Colors.grey,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              children: [
+                                Image.asset("images/jitneyfam.png", height: 70.0, width: 80.0),
+                                SizedBox(width: 16.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "J!tney-Fam", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                    ),
+                                    Text(
+                                      ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Text(
+                                      ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.95}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+    
+                      SizedBox(height: 10.0,),
+                      Divider(height:2.0, thickness:2.0),
+                      SizedBox(height: 10.0,),
+    
+    //// Jitney Lux category
+                      GestureDetector(
+                        onTap: ()
+                        {
+                           
+                           setState(()
+                              {
+                               state = "requesting";
+                               carRideType = "Jitney-Lux";                      
+                              });
+                             displayRideRequestContainer();
+                             availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
+                             searchNearestDriver();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          color: Colors.grey,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              children: [
+                                Image.asset("images/jitneylux.png", height: 70.0, width: 80.0),
+                                SizedBox(width: 16.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "J!tney-Lux", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
+                                    ),
+                                    Text(
+                                      ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Text(
+                                      ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))* 1.2}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+    
+                      SizedBox(height: 10.0,),
+                      Divider(height:2.0, thickness:2.0),
+                      SizedBox(height: 10.0,),
+    
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          children: [
+                            Icon(FontAwesomeIcons.moneyCheckAlt, size: 18.0, color: Colors.black54),
+                            SizedBox(width: 6.0,),
+                            Text("Cash"),
+                            SizedBox(width: 6.0),
+                            Icon(Icons.keyboard_arrow_down, color: Colors.black54, size: 16.0,),
+    
+                          ],
+                        ),
+                        ),
+    
+                                       
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 6.0,),
-                        Text("Hello there", style: TextStyle(fontSize: 12.0),),
-                        Text("Where to", style: TextStyle(fontSize: 20.0,fontFamily: "Brand-Bold"),),
-                        SizedBox(height: 20.0,),
-                        GestureDetector(
-                          onTap: () async
-                          {
-                            var res = await Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen()));
-
-                            if(res == "obtainDirection")
-                            {
-                              displayRideDetailsContainer();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                            color: white,
-                            borderRadius: BorderRadius.circular(23.0),
-                            boxShadow: [
-                                BoxShadow(
-                                  color: black,
-                                  blurRadius: 6.0,
-                                  spreadRadius: 0.5,
-                                  offset: Offset(0.7, 0.7),
-                                 ),
-                                ],
-                               ),
-
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                Icon(Icons.search, color: Colors.blue,),
-                                SizedBox(width: 10.0,),
-                                Text("Search drop-off location"),
-                                 ],
-                                 ),
-                            ),   
-
-                               ),
-                        ),
-                        SizedBox(height: 24.0),
-                        Row(
-                          children: [
-                            Icon(Icons.home, color: grey,),
-                            SizedBox(width: 12.0,),
-                            Column(
-                              crossAxisAlignment:CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  Provider.of<AppData>(context).pickUpLocation != null 
-                                   ? Provider.of<AppData>(context).pickUpLocation.placeName 
-                                   : "Add home",
-                                ),
-                                SizedBox(height: 5.0),
-                                Text("Living home address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
-                              ],
-
-                            )
-
-                          ],
-                        ),
-                        SizedBox(height: 10.0,),
-
-                        DividerWidget(),
-
-                        SizedBox(height: 10.0,),
-
-                        Row(
-                          children: [
-                            Icon(Icons.work, color: grey,),
-                            SizedBox(width: 12.0,),
-                            Column(
-                              crossAxisAlignment:CrossAxisAlignment.start,
-                              children: [
-                                Text("Add work"),
-                                SizedBox(height: 5.0),
-                                Text("Your office address",style: TextStyle(color: Colors.black54,fontSize: 12.0),),
-                              ],
-
-                            )
-
-                          ],
-                        )
-
-                      ],
-                    ),
-                  ),
-              ),
-            ),
-          ),
-          
-          //Ride details UI
-          Positioned(
-          bottom: 0.0,
-          left: 0.0,
-          right: 0.0,
-          child: AnimatedSize(
-            vsync: this,
-            curve: Curves.bounceIn,
-            duration: new Duration(milliseconds: 160),
-            child: Container(
-              height: rideDetailsContainerHeight,
-              decoration: BoxDecoration(
-                color: white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0),topRight: Radius.circular(16.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: black,
-                    blurRadius: 16.0,
-                    spreadRadius: 0.6,
-                    offset: Offset(0.7, 0.7),
-                  ),
-                ]
-              ),
-              child: Padding(
-                padding:  EdgeInsets.symmetric(vertical: 17.0),
-                child: Column(
-                  children: [
-    /// jitney ride category
-                    GestureDetector(
-                      onTap: ()
-                      {
-                         
-                         setState(() {
-                             state = "requesting";
-                             carRideType = "Jitney";                        
-                            });
-                               
-                           displayRideRequestContainer();
-                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
-                           searchNearestDriver();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.grey,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              Image.asset("images/jitney.png", height: 70.0, width: 80.0),
-                              SizedBox(width: 16.0,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "J!tney", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
-                                  ),
-                                  Text(
-                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Text(
-                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.75}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10.0,),
-                    Divider(height:2.0, thickness:2.0),
-                    SizedBox(height: 10.0,),
-
-///  jitney fam category
-                    GestureDetector(
-                      onTap: ()
-                      {
-                         
-                         setState(() {
-                             state = "requesting";
-                             carRideType = "Jitney-Fam";                       
-                                });
-                           displayRideRequestContainer();
-                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
-                           searchNearestDriver();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.grey,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              Image.asset("images/jitneyfam.png", height: 70.0, width: 80.0),
-                              SizedBox(width: 16.0,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "J!tney-Fam", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
-                                  ),
-                                  Text(
-                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Text(
-                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))*0.95}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10.0,),
-                    Divider(height:2.0, thickness:2.0),
-                    SizedBox(height: 10.0,),
-
-//// Jitney Lux category
-                    GestureDetector(
-                      onTap: ()
-                      {
-                         
-                         setState(()
-                            {
-                             state = "requesting";
-                             carRideType = "Jitney-Lux";                      
-                            });
-                           displayRideRequestContainer();
-                           availableDrivers = GeoFireAssistant.nearByAvailableDriversList;
-                           searchNearestDriver();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.grey,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              Image.asset("images/jitneylux.png", height: 70.0, width: 80.0),
-                              SizedBox(width: 16.0,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "J!tney-Lux", style: TextStyle(fontSize: 18.0, fontFamily: "Brand Bold"),
-                                  ),
-                                  Text(
-                                    ((tripDirectionDetails != null) ? tripDirectionDetails.distanceText : ''), style: TextStyle(fontSize: 18.0, color: grey),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Text(
-                                    ((tripDirectionDetails != null) ? '\$${(AssistantMethods.calculateFares(tripDirectionDetails))* 1.2}': ''), style: TextStyle(fontFamily: "Brand-Bold"),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 10.0,),
-                    Divider(height:2.0, thickness:2.0),
-                    SizedBox(height: 10.0,),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        children: [
-                          Icon(FontAwesomeIcons.moneyCheckAlt, size: 18.0, color: Colors.black54),
-                          SizedBox(width: 6.0,),
-                          Text("Cash"),
-                          SizedBox(width: 6.0),
-                          Icon(Icons.keyboard_arrow_down, color: Colors.black54, size: 16.0,),
-
-                        ],
-                      ),
-                      ),
-
-                                     
-                  ],
                 ),
               ),
             ),
-          ),
-         ),
-        
-          //Ride request or cancel UI
-          Positioned(
-           top: 0.0,
-           left: 0.0,
-           right: 0.0,
-           child: Container(
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
-               color: white,
-               boxShadow: [
-                 BoxShadow(
-                   color: black,
-                   blurRadius: 16.0,
-                   spreadRadius: 0.6,
-                   offset: Offset(0.7, 0.7),    
-                 ),
-               ],
-             ),
-             height: requestRideContainerHeight,
-             child: Padding(
-               padding: const EdgeInsets.all(30.0),
-               child: Column(
-                 children: [
-                    SizedBox(height: 12.0,),
-
-                    SizedBox(
-                      height: 200.0,
-                      child: WavyAnimatedTextKit(
-                          textStyle: TextStyle(
-                                 fontSize: 40.0,
-                                 fontWeight: FontWeight.bold,
-                                 fontFamily: "Canterbury"
-                            ),
-                             text: [
-                                  "Requesting your ride...",
-                                  "please wait...",
-                                  "Finding your driver",                              
-                                    ],
-                           isRepeatingAnimation: true,
-                          ),
-                    ),
-                    SizedBox(height: 22.0,),
-
-                    GestureDetector(
-                      onTap: ()
-                      {
-                        cancelRideRequest();
-                        resetApp();
-                      },
-                      child: Container(
-                        height: 60.0,
-                        width: 60.0,
-                        decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(26.0),
-                          border: Border.all(width: 2.0, color: Colors.black54),
-                        ),
-                        child: Icon(Icons.close, size: 26.0),
-                      ),
-                    ),
-
-                    SizedBox(height: 10.0,),
-
-                    Container(
-                      width: double.infinity,
-                      child: Text("Cancel Ride", textAlign: TextAlign.center,
-                      style:  TextStyle(fontSize: 12.0),
-                      ),
-                    ),
-
+           ),
+          
+            //Ride request or cancel UI
+            Positioned(
+             top: 0.0,
+             left: 0.0,
+             right: 0.0,
+             child: Container(
+               decoration: BoxDecoration(
+                 borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+                 color: white,
+                 boxShadow: [
+                   BoxShadow(
+                     color: black,
+                     blurRadius: 16.0,
+                     spreadRadius: 0.6,
+                     offset: Offset(0.7, 0.7),    
+                   ),
                  ],
+               ),
+               height: requestRideContainerHeight,
+               child: Padding(
+                 padding: const EdgeInsets.all(30.0),
+                 child: Column(
+                   children: [
+                      SizedBox(height: 12.0,),
+    
+                      SizedBox(
+                        height: 200.0,
+                        child: WavyAnimatedTextKit(
+                            textStyle: TextStyle(
+                                   fontSize: 40.0,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: "Canterbury"
+                              ),
+                               text: [
+                                    "Requesting your ride...",
+                                    "please wait...",
+                                    "Finding your driver",                              
+                                      ],
+                             isRepeatingAnimation: true,
+                            ),
+                      ),
+                      SizedBox(height: 22.0,),
+    
+                      GestureDetector(
+                        onTap: ()
+                        {
+                          cancelRideRequest();
+                          resetApp();
+                        },
+                        child: Container(
+                          height: 60.0,
+                          width: 60.0,
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(26.0),
+                            border: Border.all(width: 2.0, color: Colors.black54),
+                          ),
+                          child: Icon(Icons.close, size: 26.0),
+                        ),
+                      ),
+    
+                      SizedBox(height: 10.0,),
+    
+                      Container(
+                        width: double.infinity,
+                        child: Text("Cancel Ride", textAlign: TextAlign.center,
+                        style:  TextStyle(fontSize: 12.0),
+                        ),
+                      ),
+    
+                   ],
+                 ),
                ),
              ),
            ),
-         ),
-        
-          // display assigned driver info
-          Positioned(
-           top: 0.0,
-           left: 0.0,
-           right: 0.0,
-           child: Container(
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
-               color: white,
-               boxShadow: [
-                 BoxShadow(
-                   color: black,
-                   blurRadius: 16.0,
-                   spreadRadius: 0.6,
-                   offset: Offset(0.7, 0.7),    
-                 ),
-               ],
-             ),
-             height: driverDetailsContainerheight,
-             child: Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
-               child: Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: [
-                    SizedBox(height: 6.0,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(rideStatus, textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0, fontFamily: "Brand-bold",),),
-                      
-                      
-                      ],
-                    ),
-                    SizedBox(height: 22.0),
-
-                    Divider(height: 2.0, thickness: 2.0,),
-
-                    SizedBox(height: 22.0),
-
-                    Text(carDetailsDriver, style: TextStyle(color: Colors.grey,)),
-
-                    Text(driverName, style: TextStyle(fontSize: 20.0)),
-
-                    SizedBox(height: 22.0),
-
-                    Divider(height: 2.0, thickness: 2.0,),
-
-                    SizedBox(height: 22.0),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                       Padding(
-                         padding: const EdgeInsets.symmetric(horizontal:20.0),
-                         // ignore: deprecated_member_use
-                         child: RaisedButton(
-                           onPressed: ()
-                           {                             
-                             launch(('tel://$driverPhone'));
-                           },
-                           color: Colors.green,
-                           child: Padding(
-                             padding:EdgeInsets.all(17.0),
-                             child:Row(
-                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                               children: [
-                                 Text('Call Driver', 
-                                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
-                                 ),
-                                 Icon(Icons.call, color:Colors.white, size: 26.0),
-                               ],
+          
+            // display assigned driver info
+            Positioned(
+             top: 0.0,
+             left: 0.0,
+             right: 0.0,
+             child: Container(
+               decoration: BoxDecoration(
+                 borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0),),
+                 color: white,
+                 boxShadow: [
+                   BoxShadow(
+                     color: black,
+                     blurRadius: 16.0,
+                     spreadRadius: 0.6,
+                     offset: Offset(0.7, 0.7),    
+                   ),
+                 ],
+               ),
+               height: driverDetailsContainerheight,
+               child: Padding(
+                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 18.0),
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                      SizedBox(height: 6.0,),
+    
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(rideStatus, textAlign: TextAlign.center, style: TextStyle(fontSize: 20.0, fontFamily: "Brand-bold",),),
+                        
+                        
+                        ],
+                      ),
+                      SizedBox(height: 22.0),
+    
+                      Divider(height: 2.0, thickness: 2.0,),
+    
+                      SizedBox(height: 22.0),
+    
+                      Text(carDetailsDriver, style: TextStyle(color: Colors.grey,)),
+    
+                      Text(driverName, style: TextStyle(fontSize: 20.0)),
+    
+                      SizedBox(height: 22.0),
+    
+                      Divider(height: 2.0, thickness: 2.0,),
+    
+                      SizedBox(height: 22.0),
+    
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                         Padding(
+                           padding: const EdgeInsets.symmetric(horizontal:20.0),
+                           // ignore: deprecated_member_use
+                           child: RaisedButton(
+                             onPressed: ()
+                             {                             
+                               launch(('tel://$driverPhone'));
+                             },
+                             color: Colors.green,
+                             child: Padding(
+                               padding:EdgeInsets.all(17.0),
+                               child:Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                 children: [
+                                   Text('Call Driver', 
+                                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+                                   ),
+                                   Icon(Icons.call, color:Colors.white, size: 26.0),
+                                 ],
+                               ),
                              ),
                            ),
                          ),
-                       ),
-                      ],
-                    ),
-                 ],
+                        ],
+                      ),
+                   ],
+                 ),
                ),
-             ),
-          ),
             ),
-        ],
-      ),
+              ),
+          ],
+        ),
     );
   }
 

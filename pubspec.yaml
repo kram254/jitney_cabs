@@ -74,6 +74,7 @@ flutter:
     - images/jitneyfam.png
     - images/jitneylux.png
     - images/background.png
+    - images/package-delivery.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
