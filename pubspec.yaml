@@ -21,27 +21,29 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
   animated_text_kit: ^4.0.0
   cupertino_icons: ^1.0.2
   firebase_auth: ^0.20.0
   firebase_core: ^0.7.0
   firebase_database: ^6.0.0
+  flutter:
+    sdk: flutter
   flutter_geofire: ^2.0.0
+  flutter_icons: ^1.1.0
   flutter_polyline_points: ^0.2.4
+  flutter_spinkit: ^4.1.2
   fluttertoast: ^7.1.8
   font_awesome_flutter: ^9.0.0
   geolocator: ^6.1.1
   google_maps_flutter: ^2.0.1
   http: null
-  provider: ^5.0.0
-  url_launcher: ^5.7.10
-  smooth_star_rating: ^1.1.1
   intl: ^0.16.1
-  flutter_spinkit: "^4.1.2"
-  flutter_icons: ^1.1.0
   intl_phone_field: ^2.0.0
+  provider: ^5.0.0
+  uuid: ^3.0.4
+  smooth_star_rating: ^1.1.1
+  url_launcher: ^5.7.10
+  
 
 dev_dependencies:
   flutter_test:
