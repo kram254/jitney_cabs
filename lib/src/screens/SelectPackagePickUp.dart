@@ -19,18 +19,17 @@ import 'package:jitney_cabs/src/widgets/address_search.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-//import 'package:uuid/uuid.dart';
-// import 'package:jitney_cabs/src/assistants/requestAssistant.dart';
-// import 'package:jitney_cabs/src/helpers/configMaps.dart';
 
-class SelectPackageDropOff extends StatefulWidget {
+class SelectPackagePickUp extends StatefulWidget {
+ /// const SelectPackagePickUp({ Key? key }) : super(key: key);
 
   @override
-  _SelectPackageDropOffState createState() => _SelectPackageDropOffState();
+  _SelectPackagePickUpState createState() => _SelectPackagePickUpState();
 }
 
-class _SelectPackageDropOffState extends State<SelectPackageDropOff> {
-  final _controller = TextEditingController();
+class _SelectPackagePickUpState extends State<SelectPackagePickUp> {
+
+final _controller = TextEditingController();
   // String _streetNumber = '';
   // String _street = '';
   // String _city = '';
@@ -212,7 +211,7 @@ void displayRideDetailsContainer() async
                         children: [
                           SizedBox(height: 6.0,),
                           Text("Hello there", style: TextStyle(fontSize: 12.0),),
-                          Text("Package drop-off location.", style: TextStyle(fontWeight: FontWeight.w400,fontSize: 20.0,fontFamily: "Brand-Bold"),),
+                          Text("Package pick-up location.", style: TextStyle(fontWeight: FontWeight.w400,fontSize: 20.0,fontFamily: "Brand-Bold"),),
                           SizedBox(height: 20.0,),
                           GestureDetector(
                             onTap: () async
@@ -243,7 +242,7 @@ void displayRideDetailsContainer() async
                                     children: [
                                     Icon(Icons.search, color: orange,),
                                     SizedBox(width: 10.0,),
-                                    Text("Search drop-off location"),
+                                    Text("Search pick-up location"),
                                      ],
                                      ),
                                    ), 
@@ -259,7 +258,7 @@ void displayRideDetailsContainer() async
                                 crossAxisAlignment:CrossAxisAlignment.start,
                                 children: [
                                    Text(
-                                      Provider.of<AppData>(context).pickUpLocation != null 
+                                       Provider.of<AppData>(context).pickUpLocation != null 
                                        ? Provider.of<AppData>(context).pickUpLocation.placeName 
                                        : "Add home",
                                     ),
@@ -386,8 +385,7 @@ void displayRideDetailsContainer() async
     );
   }
 
-
-void initGeoFireListener()
+  void initGeoFireListener()
   {
     ///
      Geofire.initialize("availableDrivers");  

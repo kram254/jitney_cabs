@@ -322,6 +322,7 @@ void displayRideDetailsContainer() async
     });
 }
 
+
 void locatePosition() async
 {
   Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
