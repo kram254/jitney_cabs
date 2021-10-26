@@ -5,6 +5,7 @@ import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/models/address.dart';
 import 'package:jitney_cabs/src/models/placePredictions.dart';
 import 'package:jitney_cabs/src/providers/appData.dart';
+import 'package:jitney_cabs/src/screens/checkoutScreen.dart';
 import 'package:jitney_cabs/src/widgets/Divider.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,6 @@ class _PackageSearchScreenState extends State<PackageSearchScreen> {
    
   //initializing the list
   List<PlacePredictions> placePredictionList = [];
-
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +231,7 @@ class _PackageSearchScreenState extends State<PackageSearchScreen> {
           ElevatedButton(
               onPressed: ()
               {
-              ////Navigator.push(context, MaterialPageRoute(builder: (context) => SelectPackageDropOff()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen()));
               },
               child:Text('Next'),
               style: ElevatedButton.styleFrom(

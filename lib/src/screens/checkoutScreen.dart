@@ -16,6 +16,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       backgroundColor: white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        title: Text('Select your payment plan',
+            style:TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
+            ),
+            ),
         elevation: 0.0,
         iconTheme: IconThemeData(
           color: black,
@@ -25,35 +31,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text('Select your payment plan',
-            style:TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
-
-            ),
-            ),
             SizedBox(height:10.0),
-            Row(
+             Row(
               children: [
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                    decoration: BoxDecoration(
-                     
-                    borderRadius: BorderRadius.all( Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                       color: black,
-                       blurRadius: 7.0,
-                       spreadRadius: 0.6,
-                       offset: Offset(0.7, 0.7),
-                  ),
-                ]
-              ),
+                    decoration: BoxDecoration(  
+                    color: black, 
+                    borderRadius: BorderRadius.all( Radius.circular(10.0)),
+                    ),
                     child: Column(
                       children: [
                         Text("Free", style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.bold, color: white,
                         ),),
                         SizedBox(height:5.0),
                         Text("7 days", style: TextStyle(
@@ -69,24 +60,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                     decoration: BoxDecoration(
-                    
-                    borderRadius: BorderRadius.all( Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                       color: black,
-                       blurRadius: 7.0,
-                       spreadRadius: 0.6,
-                       offset: Offset(0.7, 0.7),
-                  ),
-                ]
-              ),
+                    color: black, 
+                    borderRadius: BorderRadius.all( Radius.circular(10.0)),
+                   ),
                     child: Column(
                       children: [
-                        Text("KShs. 1000", style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        Text("132 Rands", style: TextStyle(
+                          fontWeight: FontWeight.bold, color: white,
                         ),),
                         SizedBox(height:5.0),
-                        Text("For 7 days", style: TextStyle(
+                        Text("For 3 days", style: TextStyle(
                           color: grey, 
                           fontSize: 12.0,
                         ),),
@@ -94,30 +77,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ),
                   ),
-                  
+              ],
+            ),
+
+            SizedBox(height: 10.0),
+            Row(
+              children: [                  
                   Expanded(
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                     decoration: BoxDecoration(
-                    color: Colors.indigo, 
-                    borderRadius: BorderRadius.all( Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                       color: black,
-                       blurRadius: 7.0,
-                       spreadRadius: 0.6,
-                       offset: Offset(0.7, 0.7),
-                  ),
-                ]
+                    color: orange, 
+                    borderRadius: BorderRadius.all( Radius.circular(10.0)),
+                    
               ),
                     child: Column(
                       children: [
-                        Text("KShs. 2000", style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        Text("264 Rands", style: TextStyle(
+                          fontWeight: FontWeight.bold, color: white,
                         ),),
                         SizedBox(height:5.0),
-                        Text(" For 7 days", style: TextStyle(
-                          color: grey, 
+                        Text(" For 5 days", style: TextStyle(
+                          color: white,
                           fontSize: 12.0,
                         ),),
                       ],
@@ -130,24 +111,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                     decoration: BoxDecoration(
                     color: orange,   
-                    borderRadius: BorderRadius.all( Radius.circular(20)),
-                    boxShadow: [
-                      BoxShadow(
-                       color: black,
-                       blurRadius: 7.0,
-                       spreadRadius: 0.6,
-                       offset: Offset(0.7, 0.7),
+                    borderRadius: BorderRadius.all( Radius.circular(10.0)),
                     ),
-                   ]
-                   ),
                     child: Column(
                       children: [
-                        Text("KShs. 3000", style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        Text("396 Rands", style: TextStyle(
+                          fontWeight: FontWeight.bold, color: white,
                         ),),
                         SizedBox(height:5.0),
                         Text("For lifetime", style: TextStyle(
-                          color: grey, 
+                          color: white, 
                           fontSize: 12.0,
                         ),),
                       ],
@@ -161,21 +134,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               padding: EdgeInsets.all(8.0),
               margin: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-             // color: Colors.indigo, 
+              color: black, 
               borderRadius: BorderRadius.all( Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: black,
-                  blurRadius: 7.0,
-                  spreadRadius: 0.6,
-                  offset: Offset(0.7, 0.7),
-                  ),
-                ]
+              
               ),
               child: ListTile(
                 leading: Icon(FontAwesomeIcons.paypal, color: orange),
-                title: Text("Paypal"),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
+                title: Text("Paypal", style: TextStyle( color: orange)),
+                trailing: Icon(Icons.arrow_forward_ios_outlined, color: orange),
               ),
             ),
 
@@ -183,21 +149,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               padding: EdgeInsets.all(8.0),
               margin: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-             // color: Colors.indigo, 
+              color: black,  
               borderRadius: BorderRadius.all( Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  // color: black,
-                  // blurRadius: 7.0,
-                  // spreadRadius: 0.6,
-                  // offset: Offset(0.7, 0.7),
-                  ),
-                ]
+              
               ),
               child: ListTile(
                 leading: Icon(FontAwesomeIcons.googleWallet, color: orange),
-                title: Text("Google Pay"),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
+                title: Text("Google Pay", style: TextStyle( color: orange)),
+                trailing: Icon(Icons.arrow_forward_ios_outlined, color: orange),
               ),
             ),
 
@@ -205,21 +164,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               padding: EdgeInsets.all(8.0),
               margin: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-             // color: Colors.indigo, 
+              color: black,
               borderRadius: BorderRadius.all( Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  // color: black,
-                  // blurRadius: 7.0,
-                  // spreadRadius: 0.6,
-                  // offset: Offset(0.7, 0.7),
-                  ),
-                ]
+              
               ),
               child: ListTile(
                 leading: Icon(FontAwesomeIcons.applePay, color: orange),
-                title: Text("Apple Pay"),
-                trailing: Icon(Icons.arrow_forward_ios_outlined),
+                title: Text("Apple Pay", style: TextStyle( color: orange)),
+                trailing: Icon(Icons.arrow_forward_ios_outlined, color: orange),
               ),
             ),
             
