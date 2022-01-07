@@ -1,7 +1,8 @@
-import 'dart:ui';
+//import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jitney_cabs/main.dart';
 import 'package:jitney_cabs/src/helpers/style.dart';
 import 'package:jitney_cabs/src/helpers/toastDisplay.dart';
@@ -9,10 +10,21 @@ import 'package:jitney_cabs/src/screens/RegistrationScreen.dart';
 import 'package:jitney_cabs/src/screens/home.dart';
 import 'package:jitney_cabs/src/widgets/progressDialog.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
       static const String idScreen = "login";
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+     bool _isLoggedIn = false;
+     GoogleSignInAccount _userObj;
+     GoogleSignIn _googleSignIn = GoogleSignIn();
+
+
       TextEditingController emailTextEditingController = TextEditingController();
+
       TextEditingController passwordTextEditingController = TextEditingController();
 
   @override
@@ -104,16 +116,65 @@ class LoginScreen extends StatelessWidget {
                child: Text("Register Here",
                style: TextStyle(color: red, fontSize: 13.0, fontFamily: "Brand Bold" ),
                ),
-             )
+             ),
+
+             Container(
+               child: _isLoggedIn
+                      ? Column(
+                        children: [
+                          Image.network(_userObj.photoUrl),
+                          Text(_userObj.displayName),
+                          Text(_userObj.email),
+                          TextButton(onPressed: ()
+                          {
+                            _googleSignIn.signOut().then((userData) 
+                               {
+                                 setState(() {
+                                   _isLoggedIn = false;
+                                 });
+                               }
+                               ). catchError((e)
+                               {
+                                 print(e);
+                               });
+                          }, 
+                          child: Text("Logout"))
+                        ],
+                      )
+                      :  Center(
+                           child: ElevatedButton(
+                             onPressed: (){
+                               _googleSignIn.signIn().then((userData) 
+                               {
+                                 setState(() {
+                                   _isLoggedIn = true;
+                                   _userObj = userData;
+                                 });
+                               }
+                               ). catchError((e)
+                               {
+                                 print(e);
+                               });
+                             },
+                             child: Text("Login with Google"),
+
+                           ),
+                      ),  
+                      
+             ),
               
             ],
           ),
         ),
+
+         
       ), 
+
     );
   }
 
    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
    void loginAndAuthenticateUser(BuildContext context) async
    {
       showDialog(
